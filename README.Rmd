@@ -1,0 +1,56 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "#>",
+    fig.path = "man/figures/README-",
+    out.width = "100%"
+)
+```
+
+# GraphExperiment <img src="man/figures/logo.png" align="right" height="139" alt="" />
+
+<!-- badges: start -->
+[![GitHub issues](https://img.shields.io/github/issues/almeidasilvaf/GraphExperiment)](https://github.com/almeidasilvaf/GraphExperiment/issues)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![check-bioc](https://github.com/almeidasilvaf/GraphExperiment/actions/workflows/rworkflows.devel.yml/badge.svg)](https://github.com/almeidasilvaf/GraphExperiment/actions/workflows/rworkflows.devel.yml)
+[![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/GraphExperiment/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/GraphExperiment?branch=devel)
+<!-- badges: end -->
+
+**GraphExperiment** provides users and developers with infrastructure to
+store quantitative data from omics assays along with networks representing
+how features (e.g., genes, proteins, metabolites) interact with each other.
+The `GraphExperiment` S4 class extends `SingleCellExperiment` to include
+support for `igraph` objects.
+
+## Installation instructions
+
+Get the latest stable `R` release from [CRAN](http://cran.r-project.org/). Then install `HybridExpress` from [Bioconductor](http://bioconductor.org/) using the following code:
+
+```{r 'install', eval = FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+
+BiocManager::install("GraphExperiment")
+```
+
+## Citation
+
+Below is the citation output from using `citation('GraphExperiment')` in R. Please
+run this yourself to check for any updates on how to cite __GraphExperiment__.
+
+```{r 'citation', eval = requireNamespace('GraphExperiment')}
+print(citation('GraphExperiment'), bibtex = TRUE)
+```
+
+Please note that the `GraphExperiment` was only made possible thanks to many other R and bioinformatics software authors, which are cited either in the vignettes and/or the paper(s) describing this package.
+
+## Code of Conduct
+
+Please note that the `GraphExperiment` project is released with a [Contributor Code of Conduct](http://bioconductor.org/about/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
