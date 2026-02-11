@@ -1,0 +1,74 @@
+
+#' The `GraphExperiment` S4 class
+#' 
+#' The `GraphExperiment` class was designed to represent rectangular, 
+#' quantitative data (e.g., from transcriptomics, proteomics, metabolomics) 
+#' along with graphs showing how features (e.g., genes, proteins, compounds)
+#' interact with each other. It extends \linkS4class{SingleCellExperiment}
+#' by providing users with an additional slot where graphs can be stored.
+#'
+#' @param ... Arguments passed to the \code{SingleCellExperiment} constructor
+#' function.
+#' @param graphs A list of `igraph` objects with one or multiple graphs.
+#' Node names (i.e., \code{V(graph)$name}) must match rownames of assays.
+#' 
+#' @return A \code{GraphExperiment} object.
+#'
+#' @details
+#' Like \linkS4class{SingleCellExperiment}, the \code{GraphExperiment} S4 
+#' class stores quantitative data with associated metadata (i.e., 
+#' \code{rowData} and \code{colData}) along with embeddings from dimensionality 
+#' reduction techniques. However, it provides users with an additional 
+#' container for \code{igraph} objects containing graphs describing how 
+#' features interact with each other. Graphs are stored in a \code{graphs} slot,
+#' which can hold one or multiple \code{igraph} objects with some sort of
+#' network representation of the features in \code{rownames}. Example
+#' graphs can be coexpression networks, regulatory networks, or co-abundance
+#' networks. 
+#'
+#' Importantly, node names in each graph must match \code{rownames} of the
+#' assays, and subsetting methods simultaneously subset \code{assays}, 
+#' \code{rowData}, and \code{graphs}.
+#' 
+#' Besides the constructor function (\code{GraphExperiment()}), a 
+#' \code{GraphExperiment} object can also be created by coercing from a
+#' \linkS4class{SummarizedExperiment} or \linkS4class{SingleCellExperiment}
+#' object.
+#' 
+#' @rdname GraphExperiment
+#' @importFrom SingleCellExperiment SingleCellExperiment
+#' @importFrom S4Vectors SimpleList
+#' @importFrom methods new as
+#' @export
+#' @examples
+#' # Example 1: from constructor function ----
+#' ## Simulate a matrix with 200 genes and 100 cells
+#' gene_ids <- paste0("gene", seq_len(200))
+#' cell_ids <- paste0("cell", seq_len(100))
+#' mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
+#'
+#' ## Create a graph from correlations (`igraph` object)
+#' g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
+#'
+#' ## Construct `GraphExperiment` object
+#' ge <- GraphExperiment(
+#'     assays = list(counts = mat),
+#'     graphs = list(cor = g)
+#' )
+#' ge
+#' 
+#' # Example 2: From `SingleCellExperiment` object ----
+#' sce <- SingleCellExperiment(assays = list(counts = mat))
+#' ge <- as(sce, "GraphExperiment")
+#' ge
+#' 
+GraphExperiment <- function(..., graphs = list()) {
+    
+    sce <- SingleCellExperiment(...)
+    
+    if(is.list(graphs)) { graphs <- SimpleList(graphs) }
+    ge <- new("GraphExperiment", sce, graphs = graphs)
+    
+    return(ge)
+}
+
