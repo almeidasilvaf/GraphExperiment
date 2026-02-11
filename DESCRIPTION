@@ -14,7 +14,13 @@ Authors@R:
            email = "yves.vandepeer@psb.vib-ugent.be",
            comment = c(ORCID = "0000-0003-4327-3730"))
     )
-Description: 
+Description: GraphExperiment provides users and developers with an S4 class
+    that extends `SingleCellExperiment` by offering infrastructure to
+    store and retrieve networks (`igraph` objects) representing how features
+    are associated with each other. The class was designed to store networks
+    inferred from high-dimensional quantitative data, including gene 
+    coexpression networks (GCNs), gene regulatory networks (GRNs), 
+    co-abundance networks (from proteomics and metabolomics).
 License: GPL-3
 Encoding: UTF-8
 LazyData: false
@@ -31,7 +37,7 @@ Depends:
     igraph
 Imports:
     methods,
-    utils,
+    SummarizedExperiment,
     BiocBaseUtils,
     S4Vectors
 Suggests: 
