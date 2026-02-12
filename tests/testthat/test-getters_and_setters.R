@@ -26,9 +26,16 @@ test_that("Constructor function works", {
 
 test_that("Getters work", {
     
+    ge_empty <- ge
+    graphs(ge_empty) <- NULL
+    
     expect_true(is(graphs(ge), "SimpleList"))
     expect_true(is(graph(ge, 1), "igraph"))
+    expect_true(is(graph(ge), "igraph"))
     expect_equal(graphNames(ge), "cor")
+    
+    expect_error(graph(ge_empty))
+    expect_error(graph(ge, 10))
 })
 
 test_that("Setters work", {
@@ -44,5 +51,10 @@ test_that("Setters work", {
     expect_error(graphs(nge) <- "graphs")
     expect_error(graph(nge) <- "graph")
     expect_error(graphNames(nge) <- c(1, 2))
+})
+
+test_that("show method works", {
+
+    expect_null(show(ge))
 })
 

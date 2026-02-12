@@ -3,7 +3,8 @@
 #' 
 #' The \code{GraphExperiment} class provides users with methods to get and
 #' set graphs (\code{igraph} objects) representing how features of 
-#' \linkS4class{SingleCellExperiment} objects relate to each other.
+#' \code{\linkS4class{SingleCellExperiment}} objects relate to 
+#' each other.
 #'
 #' @param x A \code{GraphExperiment} object.
 #' @param i List element (numeric for index, character for name) of the element
@@ -87,6 +88,19 @@ setMethod(
 #' @rdname GraphExperiment-methods
 #' @export
 setMethod(
+    "graph", c("GraphExperiment", "missing"),
+    function(x, i) {
+        glist <- graphs(x)
+        if(length(glist) == 0) {
+            stop("The 'graphs' slot is empty.")
+        }
+        glist[[1]]
+    }
+)
+
+#' @rdname GraphExperiment-methods
+#' @export
+setMethod(
     "graph", "GraphExperiment", 
     function(x, i) {
         
@@ -97,7 +111,6 @@ setMethod(
         })
     } 
 )
-
 
 #' @rdname GraphExperiment-methods
 #' @export
