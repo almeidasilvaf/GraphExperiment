@@ -4,7 +4,8 @@
 #' The `GraphExperiment` class was designed to represent rectangular, 
 #' quantitative data (e.g., from transcriptomics, proteomics, metabolomics) 
 #' along with graphs showing how features (e.g., genes, proteins, compounds)
-#' interact with each other. It extends \linkS4class{SingleCellExperiment}
+#' interact with each other. It extends 
+#' \code{\linkS4class{SingleCellExperiment}}
 #' by providing users with an additional slot where graphs can be stored.
 #'
 #' @param ... Arguments passed to the \code{SingleCellExperiment} constructor
@@ -15,7 +16,8 @@
 #' @return A \code{GraphExperiment} object.
 #'
 #' @details
-#' Like \linkS4class{SingleCellExperiment}, the \code{GraphExperiment} S4 
+#' Like \code{\linkS4class{SingleCellExperiment}}, 
+#' the \code{GraphExperiment} S4 
 #' class stores quantitative data with associated metadata (i.e., 
 #' \code{rowData} and \code{colData}) along with embeddings from dimensionality 
 #' reduction techniques. However, it provides users with an additional 
@@ -32,8 +34,8 @@
 #' 
 #' Besides the constructor function (\code{GraphExperiment()}), a 
 #' \code{GraphExperiment} object can also be created by coercing from a
-#' \linkS4class{SummarizedExperiment} or \linkS4class{SingleCellExperiment}
-#' object.
+#' \code{\linkS4class{SummarizedExperiment}} or 
+#' \code{\linkS4class{SingleCellExperiment}} object.
 #' 
 #' @rdname GraphExperiment
 #' @importFrom SingleCellExperiment SingleCellExperiment
