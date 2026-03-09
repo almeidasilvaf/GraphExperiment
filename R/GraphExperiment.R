@@ -68,7 +68,10 @@ GraphExperiment <- function(..., graphs = list()) {
     
     sce <- SingleCellExperiment(...)
     
-    if(is.list(graphs)) { graphs <- SimpleList(graphs) }
+    if(is(graphs, "list")) { graphs <- SimpleList(graphs) }
+    if(is.null(names(graphs))) {
+        names(graphs) <- paste0("graph", seq_along(graphs))
+    }
     ge <- new("GraphExperiment", sce, graphs = graphs)
     
     return(ge)

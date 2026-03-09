@@ -9,17 +9,27 @@ g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 test_that(".node_validity works", {
     
     mat2 <- mat[1:90, ]
+    ## Nodes in graph but not in rownames
     expect_error(
         GraphExperiment(assays = list(counts = mat2), graphs = list(cor = g))
+    )
+    
+    ## Nodes in rownames but not in graph
+    mat3 <- mat[1:10, ]
+    rownames(mat3) <- paste0("gene", LETTERS[1:10])
+    mat3 <- rbind(mat, mat3)
+    expect_error(
+        GraphExperiment(assays = list(counts = mat3), graphs = list(cor = g))
     )
 })
 
 test_that(".graphs_validity works", {
     
     ge <- GraphExperiment(assays = list(counts = mat), graphs = list(cor = g))
-    expect_error(
-        graphs(ge) <- NA
-    )
+    
+    ## graphs slot is not list, SimpleList, or NULL
+    expect_error(graphs(ge) <- NA)
+    
     expect_error(
         GraphExperiment(assays = list(counts = mat), graphs = list(cor = "graph"))
     )

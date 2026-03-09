@@ -7,6 +7,13 @@ g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
  
 ge <- GraphExperiment(assays = list(counts = mat), graphs = list(cor = g))
 
+rdata <- data.frame(
+    row.names = gene_ids, 
+    pathway = sample(c("P1", "P2"), size = length(gene_ids), replace = TRUE),
+    coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
+)
+
+
 # Start tests ----
 test_that("Constructor function works", {
     ge1 <- GraphExperiment(assays = list(counts = mat), graphs = list(cor = g))
@@ -26,13 +33,31 @@ test_that("Constructor function works", {
 
 test_that("Getters work", {
     
-    ge_empty <- ge
-    graphs(ge_empty) <- NULL
-    
+    ## Basic GE object
     expect_true(is(graphs(ge), "SimpleList"))
     expect_true(is(graph(ge, 1), "igraph"))
     expect_true(is(graph(ge), "igraph"))
     expect_equal(graphNames(ge), "cor")
+    
+    ## More complex GE objects
+    ge2 <- ge
+    V(graph(ge2, 1))$degree <- degree(graph(ge2, 1))
+    
+    ge3 <- GraphExperiment(
+        assays = list(counts = mat), 
+        rowData = rdata,
+        graphs = list(cor = g)
+    )
+    
+    expect_equal(length(rowData(ge)), 0)
+    expect_equal(length(rowData(ge2)), 1)
+    
+    at_names <- igraph::vertex_attr_names(graph(ge3))
+    expect_true(all(colnames(rowData(ge3)) %in% at_names))
+    
+    ## Empty graph
+    ge_empty <- ge
+    graphs(ge_empty) <- NULL
     
     expect_error(graph(ge_empty))
     expect_error(graph(ge, 10))

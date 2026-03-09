@@ -8,6 +8,8 @@
 \alias{graph<-}
 \alias{graphNames}
 \alias{graphNames<-}
+\alias{rowData}
+\alias{rowData,GraphExperiment-method}
 \alias{graphs,GraphExperiment-method}
 \alias{graph,GraphExperiment,missing-method}
 \alias{graph,GraphExperiment,ANY-method}
@@ -17,6 +19,8 @@
 \alias{graphNames<-,GraphExperiment,character-method}
 \title{Methods for \code{GraphExperiment} objects}
 \usage{
+\S4method{rowData}{GraphExperiment}(x, use.names = TRUE, ...)
+
 \S4method{graphs}{GraphExperiment}(x)
 
 \S4method{graph}{GraphExperiment,missing}(x, i)
@@ -33,6 +37,11 @@
 }
 \arguments{
 \item{x}{A \code{GraphExperiment} object.}
+
+\item{use.names}{Passed to the \code{rowData} method of
+\code{\linkS4class{SingleCellExperiment}}. Default: TRUE.}
+
+\item{...}{Ignored.}
 
 \item{i}{List element (numeric for index, character for name) of the element
 to access or replace.}
@@ -77,13 +86,30 @@ slot.}
 }
 
 \examples{
-# Create a GraphExperiment object
+# Simulate elements of a GraphExperiment object
+## Assays
 gene_ids <- paste0("gene", seq_len(200))
 cell_ids <- paste0("cell", seq_len(100))
 mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
-g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 
-ge <- GraphExperiment(assays = list(counts = mat), graphs = list(cor = g))
+## Graph (with node attributes)
+g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
+V(g)$degree <- igraph::strength(g)
+
+## rowData
+rdata <- data.frame(
+    row.names = gene_ids, 
+    pathway = sample(c("P1", "P2"), size = length(gene_ids), replace = TRUE),
+    coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
+)
+
+
+# Create a GraphExperiment object
+ge <- GraphExperiment(
+    assays = list(counts = mat), 
+    rowData = rdata,
+    graphs = list(cor = g)
+)
 ge
 
 # Extract graph names
@@ -105,5 +131,8 @@ ge
 # Replace graph names
 graphNames(ge) <- c("network1", "network2")
 ge
+
+# Access rowData (note: rowData + node attributes combined)
+rowData(ge)
 
 }

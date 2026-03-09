@@ -2,7 +2,7 @@
 #' @importFrom igraph V
 .nodes_validity <- function(object) {
     
-    graph_list <- graphs(object)
+    graph_list <- object@graphs
     if(length(graph_list) == 0) return(NULL)
     rn <- rownames(object)
     
@@ -10,7 +10,6 @@
     msgs <- unlist(lapply(seq_along(graph_list), function(i) {
         g <- graph_list[[i]]
         graph_name <- names(graph_list)[i]
-        if(is.null(graph_name)) graph_name <- as.character(i)
         
         node_names <- V(g)$name
         
@@ -41,18 +40,12 @@
 #' @importFrom methods is
 .graphs_validity <- function(object) {
     
-    g <- graphs(object)
-    
-    # Check that graphs slot has correct type
-    if(!is.null(g) && !is(g, "list") && !is(g, "SimpleList")) {
-        return("'graphs' must be a list or SimpleList.")
-    }
+    g <- object@graphs
     
     # Check that each element is an igraph object
     if(length(g) > 0) {
         msgs <- unlist(lapply(seq_along(g), function(i) {
             graph_name <- names(g)[i]
-            if(is.null(graph_name)) graph_name <- as.character(i)
             if(!is(g[[i]], "igraph")) {
                 return(sprintf("Graph '%s' is not an igraph object", graph_name))
             }
