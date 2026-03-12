@@ -28,6 +28,11 @@ how features (e.g., genes, proteins, metabolites) interact with each other.
 The `GraphExperiment` S4 class extends `SingleCellExperiment` to include
 support for `igraph` objects.
 
+The figure belows summarizes the `GraphExperiment` class in comparison to
+the `SingleCellExperiment` class.
+
+![](vignettes/GraphExperiment.png)
+
 ## Installation instructions
 
 Get the latest stable `R` release from [CRAN](http://cran.r-project.org/). Then install `HybridExpress` from [Bioconductor](http://bioconductor.org/) using the following code:
@@ -48,8 +53,6 @@ run this yourself to check for any updates on how to cite __GraphExperiment__.
 ```{r 'citation', eval = requireNamespace('GraphExperiment')}
 print(citation('GraphExperiment'), bibtex = TRUE)
 ```
-
-Please note that the `GraphExperiment` was only made possible thanks to many other R and bioinformatics software authors, which are cited either in the vignettes and/or the paper(s) describing this package.
 
 ## Code of Conduct
 

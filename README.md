@@ -20,6 +20,11 @@ representing how features (e.g., genes, proteins, metabolites) interact
 with each other. The `GraphExperiment` S4 class extends
 `SingleCellExperiment` to include support for `igraph` objects.
 
+The figure belows summarizes the `GraphExperiment` class in comparison
+to the `SingleCellExperiment` class.
+
+![](vignettes/GraphExperiment.png)
+
 ## Installation instructions
 
 Get the latest stable `R` release from
@@ -43,10 +48,6 @@ R. Please run this yourself to check for any updates on how to cite
 ``` r
 print(citation('GraphExperiment'), bibtex = TRUE)
 ```
-
-Please note that the `GraphExperiment` was only made possible thanks to
-many other R and bioinformatics software authors, which are cited either
-in the vignettes and/or the paper(s) describing this package.
 
 ## Code of Conduct
 
