@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![GitHub issues](https://img.shields.io/github/issues/almeidasilvaf/GraphExperiment)](https://github.com/almeidasilvaf/GraphExperiment/issues)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![check-bioc](https://github.com/almeidasilvaf/GraphExperiment/actions/workflows/rworkflows.devel.yml/badge.svg)](https://github.com/almeidasilvaf/GraphExperiment/actions/workflows/rworkflows.devel.yml)
-[![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/GraphExperiment/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/GraphExperiment?branch=devel)
+[![Codecov test coverage](https://codecov.io/gh/almeidasilvaf/GraphExperiment/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/GraphExperiment)
 <!-- badges: end -->
 
 **GraphExperiment** provides users and developers with infrastructure to

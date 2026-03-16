@@ -11,7 +11,7 @@ issues](https://img.shields.io/github/issues/almeidasilvaf/GraphExperiment)](htt
 stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![check-bioc](https://github.com/almeidasilvaf/GraphExperiment/actions/workflows/rworkflows.devel.yml/badge.svg)](https://github.com/almeidasilvaf/GraphExperiment/actions/workflows/rworkflows.devel.yml)
 [![Codecov test
-coverage](https://codecov.io/gh/almeidasilvaf/GraphExperiment/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/GraphExperiment?branch=devel)
+coverage](https://codecov.io/gh/almeidasilvaf/GraphExperiment/graph/badge.svg)](https://app.codecov.io/gh/almeidasilvaf/GraphExperiment)
 <!-- badges: end -->
 
 **GraphExperiment** provides users and developers with infrastructure to
@@ -47,20 +47,20 @@ R. Please run this yourself to check for any updates on how to cite
 
 ``` r
 print(citation('GraphExperiment'), bibtex = TRUE)
-#> Warning in citation("GraphExperiment"): could not determine year for
-#> 'GraphExperiment' from package DESCRIPTION file
 #> To cite package 'GraphExperiment' in publications use:
 #> 
-#>   Almeida-Silva F, Van de Peer Y (????). _GraphExperiment: S4 Classes
-#>   for Quantitative Data and Associated Networks_. R package version
-#>   0.99.0.
+#>   Almeida-Silva F, Van de Peer Y (2026). _GraphExperiment: S4 Class for
+#>   Quantitative Data and Associated Networks_. R package version 0.99.0,
+#>   <https://github.com/almeidasilvaf/GraphExperiment>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
-#>     title = {GraphExperiment: S4 Classes for Quantitative Data and Associated Networks},
+#>     title = {GraphExperiment: S4 Class for Quantitative Data and Associated Networks},
 #>     author = {Fabricio Almeida-Silva and Yves {Van de Peer}},
+#>     year = {2026},
 #>     note = {R package version 0.99.0},
+#>     url = {https://github.com/almeidasilvaf/GraphExperiment},
 #>   }
 ```
 
