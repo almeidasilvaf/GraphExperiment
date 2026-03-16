@@ -47,6 +47,21 @@ R. Please run this yourself to check for any updates on how to cite
 
 ``` r
 print(citation('GraphExperiment'), bibtex = TRUE)
+#> Warning in citation("GraphExperiment"): could not determine year for
+#> 'GraphExperiment' from package DESCRIPTION file
+#> To cite package 'GraphExperiment' in publications use:
+#> 
+#>   Almeida-Silva F, Van de Peer Y (????). _GraphExperiment: S4 Classes
+#>   for Quantitative Data and Associated Networks_. R package version
+#>   0.99.0.
+#> 
+#> A BibTeX entry for LaTeX users is
+#> 
+#>   @Manual{,
+#>     title = {GraphExperiment: S4 Classes for Quantitative Data and Associated Networks},
+#>     author = {Fabricio Almeida-Silva and Yves {Van de Peer}},
+#>     note = {R package version 0.99.0},
+#>   }
 ```
 
 ## Code of Conduct
