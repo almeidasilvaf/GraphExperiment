@@ -1,6 +1,7 @@
 Package: GraphExperiment
 Title: S4 Classes for Quantitative Data and Associated Networks 
 Version: 0.99.0
+Date: 2026-03-01
 Authors@R: 
     c(
     person(given = "Fabricio",
@@ -22,6 +23,8 @@ Description: GraphExperiment provides users and developers with an S4 class
     coexpression networks (GCNs), gene regulatory networks (GRNs), 
     co-abundance networks (from proteomics and metabolomics).
 License: GPL-3
+URL: https://github.com/almeidasilvaf/GraphExperiment
+BugReports: https://support.bioconductor.org/tag/GraphExperiment
 Encoding: UTF-8
 LazyData: false
 biocViews: 
