@@ -4,72 +4,55 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Introduction to the *GraphExperiment* class • GraphExperiment</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to the *GraphExperiment* class">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to the *GraphExperiment* class">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">GraphExperiment</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.0</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../articles/GraphExperiment.html">Get started</a>
-</li>
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
+    <a class="navbar-brand me-2" href="../index.html">GraphExperiment</a>
+
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="active nav-item"><a class="nav-link" href="../articles/GraphExperiment.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/almeidasilvaf/GraphExperiment/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/almeidasilvaf/GraphExperiment/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Introduction to the <em>GraphExperiment</em>
-class</h1>
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+      <img src="../logo.png" class="logo" alt=""><h1>Introduction to the *GraphExperiment* class</h1>
                         <h4 data-toc-skip class="author">Fabricio
 Almeida-Silva</h4>
             <address class="author_afil">
@@ -82,8 +65,7 @@ Van de Peer</h4>
       <p>VIB-UGent Center for Plant Systems Biology, Ghent University,
 Ghent, Belgium</p>
 <br><small class="dont-index">Source: <a href="https://github.com/almeidasilvaf/GraphExperiment/blob/devel/vignettes/GraphExperiment.Rmd" class="external-link"><code>vignettes/GraphExperiment.Rmd</code></a></small>
-      <div class="hidden name"><code>GraphExperiment.Rmd</code></div>
-
+      <div class="d-none name"><code>GraphExperiment.Rmd</code></div>
     </address>
 </address>
 </div>
@@ -207,9 +189,9 @@ correlations.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/set_vertex_attr.html" class="external-link">set_vertex_attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">"degree"</span>, value <span class="op">=</span> <span class="fu"><a href="https://r.igraph.org/reference/strength.html" class="external-link">strength</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">g</span></span>
-<span><span class="co">#&gt; IGRAPH 1366df0 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH d981176 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 1366df0 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from d981176 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -322,10 +304,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get first graph by index</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 1366df0 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH d981176 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 1366df0 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from d981176 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -337,10 +319,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get first graph by index (alternative)</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graphs</a></span><span class="op">(</span><span class="va">ge</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; IGRAPH 1366df0 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH d981176 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 1366df0 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from d981176 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -352,10 +334,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get graph by name</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="st">"cor"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 1366df0 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH d981176 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 1366df0 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from d981176 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -415,9 +397,9 @@ method as follows:</p>
 <span><span class="va">todelete</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/E.html" class="external-link">E</a></span><span class="op">(</span><span class="va">fg</span><span class="op">)</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span> <span class="op">&lt;</span><span class="fl">0.4</span></span>
 <span><span class="va">fg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/delete_edges.html" class="external-link">delete_edges</a></span><span class="op">(</span><span class="va">fg</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">todelete</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fg</span></span>
-<span><span class="co">#&gt; IGRAPH 9c7ef79 UNW- 200 202 -- </span></span>
+<span><span class="co">#&gt; IGRAPH f7756e9 UNW- 200 202 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 9c7ef79 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from f7756e9 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1 --gene1  gene2 --gene2  gene3 --gene3  gene4 --gene4  gene5 --gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene6 --gene6  gene7 --gene7  gene8 --gene8  gene9 --gene9  gene10--gene10</span></span>
 <span><span class="co">#&gt; [11] gene11--gene11 gene12--gene12 gene13--gene13 gene14--gene14 gene15--gene15</span></span>
@@ -532,10 +514,10 @@ example:</p>
 <span><span class="co">#&gt; altExpNames(0):</span></span>
 <span><span class="co">#&gt; graphs(2): cor fcor</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge_subset</span>, <span class="st">"cor"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH e222786 UNW- 10 55 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 083715a UNW- 10 55 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from e222786 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 083715a (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1 gene1--gene2 gene2--gene2 gene1--gene3 gene2--gene3</span></span>
 <span><span class="co">#&gt;  [6] gene3--gene3 gene1--gene4 gene2--gene4 gene3--gene4 gene4--gene4</span></span>
 <span><span class="co">#&gt; [11] gene1--gene5 gene2--gene5 gene3--gene5 gene4--gene5 gene5--gene5</span></span>
@@ -641,29 +623,22 @@ Amezquita, Robert, Aaron Lun, Etienne Becht, et al. 2020.
 </div>
 </div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Fabricio Almeida-Silva, Yves Van de Peer.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Fabricio Almeida-Silva, Yves Van de Peer.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 
