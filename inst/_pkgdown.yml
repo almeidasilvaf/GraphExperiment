@@ -1,0 +1,16 @@
+template:
+  bootstrap: 5
+  bslib:
+    preset: "bootstrap"
+    font_scale: 1.0
+    base_font:
+      google: "Atkinson Hyperlegible"           # font for better accessibility
+    code_font:
+      google: "Source Code Pro"
+    primary: "#18416a"                          # navbar hover and sidebar: dark blue
+    navbar-light-brand-color: "#18416a"         # pkg name: white
+    navbar-light-hover-color: "#18416a"         # navbar text on hover: Bioc green
+    pkgdown-nav-height: 78px
+
+navbar:
+  type: light
