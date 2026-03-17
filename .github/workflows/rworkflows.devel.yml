@@ -28,6 +28,7 @@ jobs:
         run_vignettes: ${{ false }}
         has_testthat: ${{ true }}
         run_covr: ${{ true }}
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run_pkgdown: ${{ true }}
         has_runit: ${{ false }}
         has_latex: ${{ false }}
