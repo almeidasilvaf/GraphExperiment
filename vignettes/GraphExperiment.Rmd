@@ -63,7 +63,7 @@ provides an additional container:
 - `graphs`: list of `igraph` objects containing graphs, including (but 
 optional) node and edge attributes.
 
-```{r echo=FALSE, out.width = "100%", fig.cap="The GraphExperiment class."}
+```{r fig, echo=FALSE, out.width = "100%", fig.cap="The GraphExperiment class."}
 knitr::include_graphics("GraphExperiment.png")
 ```
 
@@ -180,7 +180,7 @@ can be a numeric scalar (index) or a character scalar (name).
 The design here is equivalent to `assays()` versus `assay()` for 
 `SummarizedExperiment` objects.
 
-```{r}
+```{r getters}
 # Get graphs
 graphs(ge)
 
@@ -201,7 +201,7 @@ and add them to node attributes. The same happens in the other direction:
 the `rowData()` method for `GraphExperiment` objects automatically adds
 node attributes (if any) to `rowData` variables.
 
-```{r}
+```{r rowdata_getter}
 # `graphs` and `rowData` are always in sync!
 rowData(ge)
 ```
@@ -249,7 +249,7 @@ ge1
 
 Lastly, you can also rename graphs by updating `graphNames` as follows:
 
-```{r}
+```{r graphNames_setter}
 # Rename graphs
 graphNames(ge1) <- c("correlations", "correlations_filtered_0.4")
 ge1
@@ -266,7 +266,7 @@ Since graphs in `GraphExperiment` objects are linked to rows, subsetting
 rows of a `GraphExperiment` object automatically subsets rows of the
 `assays`, `rowData`, and all graphs in `graphs`. For example:
 
-```{r}
+```{r subset}
 # Subsetting `GraphExperiment` object
 ge_subset <- ge[1:10, ]
 
