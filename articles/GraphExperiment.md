@@ -109,9 +109,9 @@ g <- graph_from_adjacency_matrix(
 )
 g <- set_vertex_attr(g, "degree", value = strength(g))
 g
-#> IGRAPH 8bfc13d UNW- 200 20096 -- 
+#> IGRAPH 9c444b4 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), weight (e/n)
-#> + edges from 8bfc13d (vertex names):
+#> + edges from 9c444b4 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -234,10 +234,10 @@ graphs(ge)
 
 # Get first graph by index
 graph(ge, 1)
-#> IGRAPH 8bfc13d UNW- 200 20096 -- 
+#> IGRAPH 9c444b4 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 8bfc13d (vertex names):
+#> + edges from 9c444b4 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -249,10 +249,10 @@ graph(ge, 1)
 
 # Get first graph by index (alternative)
 graphs(ge)[[1]]
-#> IGRAPH 8bfc13d UNW- 200 20096 -- 
+#> IGRAPH 9c444b4 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 8bfc13d (vertex names):
+#> + edges from 9c444b4 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -264,10 +264,10 @@ graphs(ge)[[1]]
 
 # Get graph by name
 graph(ge, "cor")
-#> IGRAPH 8bfc13d UNW- 200 20096 -- 
+#> IGRAPH 9c444b4 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 8bfc13d (vertex names):
+#> + edges from 9c444b4 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -331,9 +331,9 @@ fg <- graph(ge, "cor") |>
 todelete <- abs(E(fg)$weight) <0.4
 fg <- delete_edges(fg, which(todelete))
 fg
-#> IGRAPH 43b53ee UNW- 200 202 -- 
+#> IGRAPH 6477697 UNW- 200 202 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from 43b53ee (vertex names):
+#> + edges from 6477697 (vertex names):
 #>  [1] gene1 --gene1  gene2 --gene2  gene3 --gene3  gene4 --gene4  gene5 --gene5 
 #>  [6] gene6 --gene6  gene7 --gene7  gene8 --gene8  gene9 --gene9  gene10--gene10
 #> [11] gene11--gene11 gene12--gene12 gene13--gene13 gene14--gene14 gene15--gene15
@@ -454,10 +454,10 @@ ge_subset
 #> altExpNames(0):
 #> graphs(2): cor fcor
 graph(ge_subset, "cor")
-#> IGRAPH d0a05d6 UNW- 10 55 -- 
+#> IGRAPH 61fa082 UNW- 10 55 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from d0a05d6 (vertex names):
+#> + edges from 61fa082 (vertex names):
 #>  [1] gene1--gene1 gene1--gene2 gene2--gene2 gene1--gene3 gene2--gene3
 #>  [6] gene3--gene3 gene1--gene4 gene2--gene4 gene3--gene4 gene4--gene4
 #> [11] gene1--gene5 gene2--gene5 gene3--gene5 gene4--gene5 gene5--gene5
@@ -485,7 +485,7 @@ sessioninfo::session_info()
 #>  collate  en_US.UTF-8
 #>  ctype    en_US.UTF-8
 #>  tz       UTC
-#>  date     2026-03-16
+#>  date     2026-03-17
 #>  pandoc   3.9 @ /usr/bin/ (via rmarkdown)
 #>  quarto   1.8.27 @ /usr/local/bin/quarto
 #> 
@@ -510,7 +510,7 @@ sessioninfo::session_info()
 #>  generics             * 0.1.4   2025-05-09 [1] CRAN (R 4.6.0)
 #>  GenomicRanges        * 1.63.1  2025-12-08 [1] Bioconductor 3.23 (R 4.6.0)
 #>  glue                   1.8.0   2024-09-30 [2] CRAN (R 4.6.0)
-#>  GraphExperiment      * 0.99.0  2026-03-16 [1] Bioconductor
+#>  GraphExperiment      * 0.99.0  2026-03-17 [1] Bioconductor
 #>  htmltools              0.5.9   2025-12-04 [2] CRAN (R 4.6.0)
 #>  htmlwidgets            1.6.4   2023-12-06 [2] CRAN (R 4.6.0)
 #>  igraph               * 2.2.2   2026-02-12 [1] CRAN (R 4.6.0)
