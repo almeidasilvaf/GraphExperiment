@@ -189,9 +189,9 @@ correlations.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/set_vertex_attr.html" class="external-link">set_vertex_attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">"degree"</span>, value <span class="op">=</span> <span class="fu"><a href="https://r.igraph.org/reference/strength.html" class="external-link">strength</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">g</span></span>
-<span><span class="co">#&gt; IGRAPH 9c444b4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 96e1eb4 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 9c444b4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 96e1eb4 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -304,10 +304,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get first graph by index</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 9c444b4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 96e1eb4 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 9c444b4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 96e1eb4 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -319,10 +319,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get first graph by index (alternative)</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graphs</a></span><span class="op">(</span><span class="va">ge</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; IGRAPH 9c444b4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 96e1eb4 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 9c444b4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 96e1eb4 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -334,10 +334,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get graph by name</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="st">"cor"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 9c444b4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 96e1eb4 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 9c444b4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 96e1eb4 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -397,9 +397,9 @@ method as follows:</p>
 <span><span class="va">todelete</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/E.html" class="external-link">E</a></span><span class="op">(</span><span class="va">fg</span><span class="op">)</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span> <span class="op">&lt;</span><span class="fl">0.4</span></span>
 <span><span class="va">fg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/delete_edges.html" class="external-link">delete_edges</a></span><span class="op">(</span><span class="va">fg</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">todelete</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fg</span></span>
-<span><span class="co">#&gt; IGRAPH 6477697 UNW- 200 202 -- </span></span>
+<span><span class="co">#&gt; IGRAPH e7f4620 UNW- 200 202 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 6477697 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from e7f4620 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1 --gene1  gene2 --gene2  gene3 --gene3  gene4 --gene4  gene5 --gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene6 --gene6  gene7 --gene7  gene8 --gene8  gene9 --gene9  gene10--gene10</span></span>
 <span><span class="co">#&gt; [11] gene11--gene11 gene12--gene12 gene13--gene13 gene14--gene14 gene15--gene15</span></span>
@@ -514,10 +514,10 @@ example:</p>
 <span><span class="co">#&gt; altExpNames(0):</span></span>
 <span><span class="co">#&gt; graphs(2): cor fcor</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge_subset</span>, <span class="st">"cor"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 61fa082 UNW- 10 55 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 470114d UNW- 10 55 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 61fa082 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 470114d (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1 gene1--gene2 gene2--gene2 gene1--gene3 gene2--gene3</span></span>
 <span><span class="co">#&gt;  [6] gene3--gene3 gene1--gene4 gene2--gene4 gene3--gene4 gene4--gene4</span></span>
 <span><span class="co">#&gt; [11] gene1--gene5 gene2--gene5 gene3--gene5 gene4--gene5 gene5--gene5</span></span>
