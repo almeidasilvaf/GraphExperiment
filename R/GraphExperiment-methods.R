@@ -3,13 +3,13 @@
 #' 
 #' The \code{GraphExperiment} class provides users with methods to get and
 #' set graphs (\code{igraph} objects) representing how features of 
-#' \code{\linkS4class{SingleCellExperiment}} objects relate to 
+#' \code{SingleCellExperiment} objects relate to 
 #' each other.
 #'
 #' @param x A \code{GraphExperiment} object.
 #' @param i List element (numeric for index, character for name) of the element
 #' to access or replace.
-#' @param value Replacement value for replacement methods
+#' @param value Replacement value for replacement methods.
 #' @param ... Ignored.
 #' @return Return values depend on the method. See details and examples.
 #' 
@@ -126,7 +126,7 @@ NULL
 }
 
 #' @param use.names Passed to the \code{rowData} method of
-#' \code{\linkS4class{SingleCellExperiment}}. Default: TRUE.
+#' \code{SingleCellExperiment}. Default: TRUE.
 #' @rdname GraphExperiment-methods
 #' @importFrom SummarizedExperiment rowData
 #' @export

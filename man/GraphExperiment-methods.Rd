@@ -39,14 +39,14 @@
 \item{x}{A \code{GraphExperiment} object.}
 
 \item{use.names}{Passed to the \code{rowData} method of
-\code{\linkS4class{SingleCellExperiment}}. Default: TRUE.}
+\code{SingleCellExperiment}. Default: TRUE.}
 
 \item{...}{Ignored.}
 
 \item{i}{List element (numeric for index, character for name) of the element
 to access or replace.}
 
-\item{value}{Replacement value for replacement methods}
+\item{value}{Replacement value for replacement methods.}
 }
 \value{
 Return values depend on the method. See details and examples.
@@ -54,7 +54,7 @@ Return values depend on the method. See details and examples.
 \description{
 The \code{GraphExperiment} class provides users with methods to get and
 set graphs (\code{igraph} objects) representing how features of
-\code{\linkS4class{SingleCellExperiment}} objects relate to
+\code{SingleCellExperiment} objects relate to
 each other.
 }
 \section{graphs and graph methods}{
