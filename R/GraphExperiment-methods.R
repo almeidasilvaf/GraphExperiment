@@ -37,6 +37,13 @@
 #'     slot.}
 #' }
 #' 
+#' @section rowData method:
+#' \describe{
+#'   \item{\code{rowData(x)}: }{
+#'     Getter to extract rowData (as in \code{SingleCellExperiment} objects),
+#'     but with node attributes of graphs included.}
+#' }
+#' 
 #' @name GraphExperiment-methods
 #' @aliases 
 #' graphs graphs<-
@@ -129,6 +136,7 @@ NULL
 #' \code{SingleCellExperiment}. Default: TRUE.
 #' @rdname GraphExperiment-methods
 #' @importFrom SummarizedExperiment rowData
+#' @importFrom igraph as_data_frame
 #' @export
 setMethod(
     "rowData", "GraphExperiment",

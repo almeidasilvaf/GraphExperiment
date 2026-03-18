@@ -85,6 +85,15 @@ slot.}
 }
 }
 
+\section{rowData method}{
+
+\describe{
+\item{\code{rowData(x)}: }{
+Getter to extract rowData (as in \code{SingleCellExperiment} objects),
+but with node attributes of graphs included.}
+}
+}
+
 \examples{
 # Simulate elements of a GraphExperiment object
 ## Assays

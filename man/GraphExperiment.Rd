@@ -27,8 +27,7 @@ interact with each other. It extends
 by providing users with an additional slot where graphs can be stored.
 }
 \details{
-Like \code{SingleCellExperiment},
-the \code{GraphExperiment} S4
+Like \code{SingleCellExperiment}, the \code{GraphExperiment} S4
 class stores quantitative data with associated metadata (i.e.,
 \code{rowData} and \code{colData}) along with embeddings from dimensionality
 reduction techniques. However, it provides users with an additional
