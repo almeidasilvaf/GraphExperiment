@@ -168,7 +168,6 @@ setMethod(
 )
 
 #' @rdname GraphExperiment-methods
-#' @importFrom SingleCellExperiment rowData
 #' @export
 setMethod(
     "graphs", "GraphExperiment", 
