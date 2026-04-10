@@ -29,7 +29,7 @@ to the `SingleCellExperiment` class.
 ## Installation instructions
 
 Get the latest stable `R` release from
-[CRAN](http://cran.r-project.org/). Then install `HybridExpress` from
+[CRAN](http://cran.r-project.org/). Then install `GraphExperiment` from
 [Bioconductor](http://bioconductor.org/) using the following code:
 
 ``` r
