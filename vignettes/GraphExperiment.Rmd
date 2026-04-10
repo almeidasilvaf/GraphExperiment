@@ -40,7 +40,34 @@ associated metadata exist (e.g., `SummarizedExperiment`, `SingleCellExperiment`,
 `SpatialExperiment`, etc), support for networks describing how features relate
 to each other is currently missing. `GraphExperiment` is an S4 class that 
 extends `SingleCellExperiment` [@sce] to include an additional container 
-for networks associated with assay features.
+for networks associated with **assay features** (graphs representing columns,
+such as samples and cells, are not supported by this package).
+
+Of note, trees are an alternative way of representing how assay features are 
+related to each other. Users interested in tree representations of 
+assays rows/columns can use the `r BiocStyle::Biocpkg("TreeSummarizedExperiment")`
+package. Trees are essentially *a kind of graph* (i.e., all trees are graphs,
+but not all graphs are trees). Here, we chose to use a more
+general graph representation (namely `igraph` objects) to provide users and 
+developers with more flexibility.
+
+# Installation
+
+`GraphExperiment` can be installed from Bioconductor with the following code:
+
+```{r installation, eval=FALSE}
+if(!requireNamespace('BiocManager', quietly = TRUE))
+  install.packages('BiocManager')
+
+BiocManager::install("GraphExperiment")
+```
+
+```{r load_package, message=FALSE}
+# Load package after installation
+library(GraphExperiment)
+
+set.seed(777) # for reproducibility
+```
 
 # Anatomy of a `GraphExperiment` object
 
@@ -61,16 +88,30 @@ Compared to `SingleCellExperiment` objects, `GraphExperiment`
 provides an additional container:
 
 - `graphs`: list of `igraph` objects containing graphs, including (but 
-optional) node and edge attributes.
+optional) node and edge attributes. Graphs are used to represent how features
+(rows, not columns) relate to each other.[^1]
 
 ```{r fig, echo=FALSE, out.width = "100%", fig.cap="The GraphExperiment class."}
 knitr::include_graphics("GraphExperiment.png")
 ```
 
+[^1]: **Note on software design:** if you're familiar with 
+`SingleCellExperiment` objects, you probably know that it offers a `rowPairs` 
+slot to store pairwise relationships between rows of assays. 
+In theory, some of the data stored in `graphs` (of a 
+`GraphExperiment` object) could be stored in `rowPairs` (of a 
+`SingleCellExperiment`). However, we chose to implement a dedicated slot with
+`igraph` objects to guarantee (i) seamless interoperability with other
+packages, given that `igraph` is the de facto standard class for graphs in R; 
+and (ii) convenience in methods (e.g., subsetting, integration with `rowData`, 
+integration across multiple graphs, etc).
+
+
 The `igraph` data class from the `r BiocStyle::CRANpkg("igraph")` package
 is the standard data structure for graph representation in R. If you are
 unfamiliar with `igraph` objects, you can learn more about it by reading 
 the `r BiocStyle::CRANpkg("igraph")` vignettes.
+
 
 # Building a `GraphExperiment` object
 
@@ -80,9 +121,6 @@ with some gene (row) and cell (column) metadata, and create a graph based
 on gene-gene correlations.
 
 ```{r simulate_slots, message=FALSE}
-library(GraphExperiment)
-set.seed(777) # for reproducibility
-
 # Simulate parts of a `GraphExperiment` object
 ## Assays
 gene_ids <- paste0("gene", seq_len(200))
