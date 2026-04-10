@@ -15,7 +15,7 @@ to the `SingleCellExperiment` class.
 ## Installation instructions
 
 Get the latest stable `R` release from
-[CRAN](http://cran.r-project.org/). Then install `HybridExpress` from
+[CRAN](http://cran.r-project.org/). Then install `GraphExperiment` from
 [Bioconductor](http://bioconductor.org/) using the following code:
 
 ``` r
@@ -39,7 +39,7 @@ print(citation('GraphExperiment'), bibtex = TRUE)
 #> To cite package 'GraphExperiment' in publications use:
 #> 
 #>   Almeida-Silva F, Van de Peer Y (2026). _GraphExperiment: S4 Class for
-#>   Quantitative Data and Associated Networks_. R package version 0.99.0,
+#>   Quantitative Data and Associated Networks_. R package version 0.99.1,
 #>   <https://github.com/almeidasilvaf/GraphExperiment>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -48,7 +48,7 @@ print(citation('GraphExperiment'), bibtex = TRUE)
 #>     title = {GraphExperiment: S4 Class for Quantitative Data and Associated Networks},
 #>     author = {Fabricio Almeida-Silva and Yves {Van de Peer}},
 #>     year = {2026},
-#>     note = {R package version 0.99.0},
+#>     note = {R package version 0.99.1},
 #>     url = {https://github.com/almeidasilvaf/GraphExperiment},
 #>   }
 ```

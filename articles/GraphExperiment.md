@@ -13,8 +13,39 @@ structures to store quantitative data and associated metadata exist
 `SpatialExperiment`, etc), support for networks describing how features
 relate to each other is currently missing. `GraphExperiment` is an S4
 class that extends `SingleCellExperiment` (Amezquita et al. 2020) to
-include an additional container for networks associated with assay
-features.
+include an additional container for networks associated with **assay
+features** (graphs representing columns, such as samples and cells, are
+not supported by this package).
+
+Of note, trees are an alternative way of representing how assay features
+are related to each other. Users interested in tree representations of
+assays rows/columns can use the
+*[TreeSummarizedExperiment](https://bioconductor.org/packages/3.23/TreeSummarizedExperiment)*
+package. Trees are essentially *a kind of graph* (i.e., all trees are
+graphs, but not all graphs are trees). Here, we chose to use a more
+general graph representation (namely `igraph` objects) to provide users
+and developers with more flexibility.
+
+## Installation
+
+`GraphExperiment` can be installed from Bioconductor with the following
+code:
+
+``` r
+
+if(!requireNamespace('BiocManager', quietly = TRUE))
+  install.packages('BiocManager')
+
+BiocManager::install("GraphExperiment")
+```
+
+``` r
+
+# Load package after installation
+library(GraphExperiment)
+
+set.seed(777) # for reproducibility
+```
 
 ## Anatomy of a `GraphExperiment` object
 
@@ -36,7 +67,8 @@ Compared to `SingleCellExperiment` objects, `GraphExperiment` provides
 an additional container:
 
 - `graphs`: list of `igraph` objects containing graphs, including (but
-  optional) node and edge attributes.
+  optional) node and edge attributes. Graphs are used to represent how
+  features (rows, not columns) relate to each other.[^1]
 
 ![The GraphExperiment class.](GraphExperiment.png)
 
@@ -57,9 +89,6 @@ simulate a scRNA-seq count matrix with some gene (row) and cell (column)
 metadata, and create a graph based on gene-gene correlations.
 
 ``` r
-
-library(GraphExperiment)
-set.seed(777) # for reproducibility
 
 # Simulate parts of a `GraphExperiment` object
 ## Assays
@@ -109,9 +138,9 @@ g <- graph_from_adjacency_matrix(
 )
 g <- set_vertex_attr(g, "degree", value = strength(g))
 g
-#> IGRAPH 2074db4 UNW- 200 20096 -- 
+#> IGRAPH 2c53993 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), weight (e/n)
-#> + edges from 2074db4 (vertex names):
+#> + edges from 2c53993 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -234,10 +263,10 @@ graphs(ge)
 
 # Get first graph by index
 graph(ge, 1)
-#> IGRAPH 2074db4 UNW- 200 20096 -- 
+#> IGRAPH 2c53993 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 2074db4 (vertex names):
+#> + edges from 2c53993 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -249,10 +278,10 @@ graph(ge, 1)
 
 # Get first graph by index (alternative)
 graphs(ge)[[1]]
-#> IGRAPH 2074db4 UNW- 200 20096 -- 
+#> IGRAPH 2c53993 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 2074db4 (vertex names):
+#> + edges from 2c53993 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -264,10 +293,10 @@ graphs(ge)[[1]]
 
 # Get graph by name
 graph(ge, "cor")
-#> IGRAPH 2074db4 UNW- 200 20096 -- 
+#> IGRAPH 2c53993 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 2074db4 (vertex names):
+#> + edges from 2c53993 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -331,9 +360,9 @@ fg <- graph(ge, "cor") |>
 todelete <- abs(E(fg)$weight) <0.4
 fg <- delete_edges(fg, which(todelete))
 fg
-#> IGRAPH b481819 UNW- 200 202 -- 
+#> IGRAPH c6571bb UNW- 200 202 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from b481819 (vertex names):
+#> + edges from c6571bb (vertex names):
 #>  [1] gene1 --gene1  gene2 --gene2  gene3 --gene3  gene4 --gene4  gene5 --gene5 
 #>  [6] gene6 --gene6  gene7 --gene7  gene8 --gene8  gene9 --gene9  gene10--gene10
 #> [11] gene11--gene11 gene12--gene12 gene13--gene13 gene14--gene14 gene15--gene15
@@ -454,10 +483,10 @@ ge_subset
 #> altExpNames(0):
 #> graphs(2): cor fcor
 graph(ge_subset, "cor")
-#> IGRAPH efe166e UNW- 10 55 -- 
+#> IGRAPH 9ba619c UNW- 10 55 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from efe166e (vertex names):
+#> + edges from 9ba619c (vertex names):
 #>  [1] gene1--gene1 gene1--gene2 gene2--gene2 gene1--gene3 gene2--gene3
 #>  [6] gene3--gene3 gene1--gene4 gene2--gene4 gene3--gene4 gene4--gene4
 #> [11] gene1--gene5 gene2--gene5 gene3--gene5 gene4--gene5 gene5--gene5
@@ -477,7 +506,7 @@ This document was created under the following conditions:
 sessioninfo::session_info()
 #> ─ Session info ───────────────────────────────────────────────────────────────
 #>  setting  value
-#>  version  R Under development (unstable) (2026-03-15 r89629)
+#>  version  R Under development (unstable) (2026-04-09 r89849)
 #>  os       Ubuntu 24.04.4 LTS
 #>  system   x86_64, linux-gnu
 #>  ui       X11
@@ -485,9 +514,9 @@ sessioninfo::session_info()
 #>  collate  en_US.UTF-8
 #>  ctype    en_US.UTF-8
 #>  tz       UTC
-#>  date     2026-03-18
-#>  pandoc   3.9 @ /usr/bin/ (via rmarkdown)
-#>  quarto   1.8.27 @ /usr/local/bin/quarto
+#>  date     2026-04-10
+#>  pandoc   3.9.0.2 @ /usr/bin/ (via rmarkdown)
+#>  quarto   1.9.37 @ /usr/local/bin/quarto
 #> 
 #> ─ Packages ───────────────────────────────────────────────────────────────────
 #>  package              * version date (UTC) lib source
@@ -495,57 +524,57 @@ sessioninfo::session_info()
 #>  Biobase              * 2.71.0  2025-10-30 [1] Bioconductor 3.23 (R 4.6.0)
 #>  BiocBaseUtils          1.13.0  2025-10-30 [1] Bioconductor 3.23 (R 4.6.0)
 #>  BiocGenerics         * 0.57.0  2025-10-30 [1] Bioconductor 3.23 (R 4.6.0)
-#>  BiocManager            1.30.27 2025-11-14 [1] CRAN (R 4.6.0)
+#>  BiocManager            1.30.27 2025-11-14 [1] CRAN (R 4.7.0)
 #>  BiocStyle            * 2.39.0  2025-10-30 [1] Bioconductor 3.23 (R 4.6.0)
 #>  bookdown               0.46    2025-12-05 [1] CRAN (R 4.6.0)
-#>  bslib                  0.10.0  2026-01-26 [2] CRAN (R 4.6.0)
-#>  cachem                 1.1.0   2024-05-16 [2] CRAN (R 4.6.0)
-#>  cli                    3.6.5   2025-04-23 [2] CRAN (R 4.6.0)
-#>  DelayedArray           0.37.0  2025-10-31 [1] Bioconductor 3.23 (R 4.6.0)
-#>  desc                   1.4.3   2023-12-10 [2] CRAN (R 4.6.0)
-#>  digest                 0.6.39  2025-11-19 [2] CRAN (R 4.6.0)
-#>  evaluate               1.0.5   2025-08-27 [2] CRAN (R 4.6.0)
-#>  fastmap                1.2.0   2024-05-15 [2] CRAN (R 4.6.0)
-#>  fs                     1.6.7   2026-03-06 [2] CRAN (R 4.6.0)
+#>  bslib                  0.10.0  2026-01-26 [2] CRAN (R 4.7.0)
+#>  cachem                 1.1.0   2024-05-16 [2] CRAN (R 4.7.0)
+#>  cli                    3.6.6   2026-04-09 [2] CRAN (R 4.7.0)
+#>  DelayedArray           0.37.1  2026-03-31 [1] Bioconductor 3.23 (R 4.7.0)
+#>  desc                   1.4.3   2023-12-10 [2] CRAN (R 4.7.0)
+#>  digest                 0.6.39  2025-11-19 [2] CRAN (R 4.7.0)
+#>  evaluate               1.0.5   2025-08-27 [2] CRAN (R 4.7.0)
+#>  fastmap                1.2.0   2024-05-15 [2] CRAN (R 4.7.0)
+#>  fs                     2.0.1   2026-03-24 [2] CRAN (R 4.7.0)
 #>  generics             * 0.1.4   2025-05-09 [1] CRAN (R 4.6.0)
-#>  GenomicRanges        * 1.63.1  2025-12-08 [1] Bioconductor 3.23 (R 4.6.0)
-#>  glue                   1.8.0   2024-09-30 [2] CRAN (R 4.6.0)
-#>  GraphExperiment      * 0.99.0  2026-03-18 [1] Bioconductor
-#>  htmltools              0.5.9   2025-12-04 [2] CRAN (R 4.6.0)
-#>  htmlwidgets            1.6.4   2023-12-06 [2] CRAN (R 4.6.0)
-#>  igraph               * 2.2.2   2026-02-12 [1] CRAN (R 4.6.0)
+#>  GenomicRanges        * 1.63.2  2026-04-07 [1] Bioconductor 3.23 (R 4.7.0)
+#>  glue                   1.8.0   2024-09-30 [2] CRAN (R 4.7.0)
+#>  GraphExperiment      * 0.99.1  2026-04-10 [1] Bioconductor
+#>  htmltools              0.5.9   2025-12-04 [2] CRAN (R 4.7.0)
+#>  htmlwidgets            1.6.4   2023-12-06 [2] CRAN (R 4.7.0)
+#>  igraph               * 2.2.3   2026-04-07 [1] CRAN (R 4.7.0)
 #>  IRanges              * 2.45.0  2025-10-31 [1] Bioconductor 3.23 (R 4.6.0)
-#>  jquerylib              0.1.4   2021-04-26 [2] CRAN (R 4.6.0)
-#>  jsonlite               2.0.0   2025-03-27 [2] CRAN (R 4.6.0)
-#>  knitr                  1.51    2025-12-20 [2] CRAN (R 4.6.0)
-#>  lattice                0.22-9  2026-02-09 [3] CRAN (R 4.6.0)
-#>  lifecycle              1.0.5   2026-01-08 [2] CRAN (R 4.6.0)
-#>  magrittr               2.0.4   2025-09-12 [2] CRAN (R 4.6.0)
-#>  Matrix                 1.7-4   2025-08-28 [3] CRAN (R 4.6.0)
+#>  jquerylib              0.1.4   2021-04-26 [2] CRAN (R 4.7.0)
+#>  jsonlite               2.0.0   2025-03-27 [2] CRAN (R 4.7.0)
+#>  knitr                  1.51    2025-12-20 [2] CRAN (R 4.7.0)
+#>  lattice                0.22-9  2026-02-09 [3] CRAN (R 4.7.0)
+#>  lifecycle              1.0.5   2026-01-08 [2] CRAN (R 4.7.0)
+#>  magrittr               2.0.5   2026-04-04 [2] CRAN (R 4.7.0)
+#>  Matrix                 1.7-5   2026-03-21 [3] CRAN (R 4.7.0)
 #>  MatrixGenerics       * 1.23.0  2025-10-30 [1] Bioconductor 3.23 (R 4.6.0)
 #>  matrixStats          * 1.5.0   2025-01-07 [1] CRAN (R 4.6.0)
-#>  otel                   0.2.0   2025-08-29 [2] CRAN (R 4.6.0)
-#>  pillar                 1.11.1  2025-09-17 [2] CRAN (R 4.6.0)
-#>  pkgconfig              2.0.3   2019-09-22 [2] CRAN (R 4.6.0)
-#>  pkgdown                2.2.0   2025-11-06 [1] CRAN (R 4.6.0)
-#>  R6                     2.6.1   2025-02-15 [2] CRAN (R 4.6.0)
-#>  ragg                   1.5.1   2026-03-06 [2] CRAN (R 4.6.0)
-#>  rlang                  1.1.7   2026-01-09 [2] CRAN (R 4.6.0)
-#>  rmarkdown              2.30    2025-09-28 [1] CRAN (R 4.6.0)
+#>  otel                   0.2.0   2025-08-29 [2] CRAN (R 4.7.0)
+#>  pillar                 1.11.1  2025-09-17 [2] CRAN (R 4.7.0)
+#>  pkgconfig              2.0.3   2019-09-22 [2] CRAN (R 4.7.0)
+#>  pkgdown                2.2.0   2025-11-06 [1] CRAN (R 4.7.0)
+#>  R6                     2.6.1   2025-02-15 [2] CRAN (R 4.7.0)
+#>  ragg                   1.5.2   2026-03-23 [2] CRAN (R 4.7.0)
+#>  rlang                  1.2.0   2026-04-06 [2] CRAN (R 4.7.0)
+#>  rmarkdown              2.31    2026-03-26 [1] CRAN (R 4.7.0)
 #>  S4Arrays               1.11.1  2025-11-25 [1] Bioconductor 3.23 (R 4.6.0)
-#>  S4Vectors            * 0.49.0  2025-10-30 [1] Bioconductor 3.23 (R 4.6.0)
-#>  sass                   0.4.10  2025-04-11 [2] CRAN (R 4.6.0)
+#>  S4Vectors            * 0.49.1  2026-04-05 [1] Bioconductor 3.23 (R 4.7.0)
+#>  sass                   0.4.10  2025-04-11 [2] CRAN (R 4.7.0)
 #>  Seqinfo              * 1.1.0   2025-10-31 [1] Bioconductor 3.23 (R 4.6.0)
-#>  sessioninfo            1.2.3   2025-02-05 [2] CRAN (R 4.6.0)
-#>  SingleCellExperiment * 1.33.1  2026-03-10 [1] Bioconductor 3.23 (R 4.6.0)
-#>  SparseArray            1.11.11 2026-03-08 [1] Bioconductor 3.23 (R 4.6.0)
+#>  sessioninfo            1.2.3   2025-02-05 [2] CRAN (R 4.7.0)
+#>  SingleCellExperiment * 1.33.2  2026-03-24 [1] Bioconductor 3.23 (R 4.7.0)
+#>  SparseArray            1.11.13 2026-04-01 [1] Bioconductor 3.23 (R 4.7.0)
 #>  SummarizedExperiment * 1.41.1  2026-02-06 [1] Bioconductor 3.23 (R 4.6.0)
-#>  systemfonts            1.3.2   2026-03-05 [2] CRAN (R 4.6.0)
-#>  textshaping            1.0.5   2026-03-06 [2] CRAN (R 4.6.0)
-#>  vctrs                  0.7.1   2026-01-23 [2] CRAN (R 4.6.0)
-#>  xfun                   0.56    2026-01-18 [2] CRAN (R 4.6.0)
+#>  systemfonts            1.3.2   2026-03-05 [2] CRAN (R 4.7.0)
+#>  textshaping            1.0.5   2026-03-06 [2] CRAN (R 4.7.0)
+#>  vctrs                  0.7.2   2026-03-21 [2] CRAN (R 4.7.0)
+#>  xfun                   0.57    2026-03-20 [2] CRAN (R 4.7.0)
 #>  XVector                0.51.0  2025-10-31 [1] Bioconductor 3.23 (R 4.6.0)
-#>  yaml                   2.3.12  2025-12-10 [2] CRAN (R 4.6.0)
+#>  yaml                   2.3.12  2025-12-10 [2] CRAN (R 4.7.0)
 #> 
 #>  [1] /__w/_temp/Library
 #>  [2] /usr/local/lib/R/site-library
@@ -560,3 +589,15 @@ sessioninfo::session_info()
 Amezquita, Robert, Aaron Lun, Etienne Becht, et al. 2020. “Orchestrating
 Single-Cell Analysis with Bioconductor.” *Nature Methods* 17: 137–45.
 <https://www.nature.com/articles/s41592-019-0654-x>.
+
+[^1]: **Note on software design:** if you’re familiar with
+    `SingleCellExperiment` objects, you probably know that it offers a
+    `rowPairs` slot to store pairwise relationships between rows of
+    assays. In theory, some of the data stored in `graphs` (of a
+    `GraphExperiment` object) could be stored in `rowPairs` (of a
+    `SingleCellExperiment`). However, we chose to implement a dedicated
+    slot with `igraph` objects to guarantee (i) seamless
+    interoperability with other packages, given that `igraph` is the de
+    facto standard class for graphs in R; and (ii) convenience in
+    methods (e.g., subsetting, integration with `rowData`, integration
+    across multiple graphs, etc).

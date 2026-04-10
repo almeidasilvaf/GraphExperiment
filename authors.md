@@ -14,13 +14,13 @@ Source:
 [`DESCRIPTION`](https://github.com/almeidasilvaf/GraphExperiment/blob/devel/DESCRIPTION)
 
 Almeida-Silva F, Van de Peer Y (2026). *GraphExperiment: S4 Class for
-Quantitative Data and Associated Networks*. R package version 0.99.0,
+Quantitative Data and Associated Networks*. R package version 0.99.1,
 <https://github.com/almeidasilvaf/GraphExperiment>.
 
     @Manual{,
       title = {GraphExperiment: S4 Class for Quantitative Data and Associated Networks},
       author = {Fabricio Almeida-Silva and Yves {Van de Peer}},
       year = {2026},
-      note = {R package version 0.99.0},
+      note = {R package version 0.99.1},
       url = {https://github.com/almeidasilvaf/GraphExperiment},
     }

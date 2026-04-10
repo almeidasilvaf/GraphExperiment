@@ -161,10 +161,10 @@ graphs(ge)
 #> List of length 1
 #> names(1): cor
 graph(ge, "cor")
-#> IGRAPH 79e8e56 DNW- 200 39990 -- 
+#> IGRAPH 383eae1 DNW- 200 39990 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from 79e8e56 (vertex names):
+#> + edges from 383eae1 (vertex names):
 #>  [1] gene1->gene1  gene1->gene2  gene1->gene3  gene1->gene4  gene1->gene5 
 #>  [6] gene1->gene6  gene1->gene7  gene1->gene8  gene1->gene9  gene1->gene10
 #> [11] gene1->gene11 gene1->gene12 gene1->gene13 gene1->gene14 gene1->gene15

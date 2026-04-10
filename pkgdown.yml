@@ -1,6 +1,6 @@
-pandoc: '3.9'
+pandoc: 3.9.0.2
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   GraphExperiment: GraphExperiment.html
-last_built: 2026-03-18T10:13Z
+last_built: 2026-04-10T20:57Z

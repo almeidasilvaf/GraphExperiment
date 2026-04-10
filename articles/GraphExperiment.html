@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">GraphExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,32 @@ structures to store quantitative data and associated metadata exist
 support for networks describing how features relate to each other is
 currently missing. <code>GraphExperiment</code> is an S4 class that
 extends <code>SingleCellExperiment</code> <span class="citation">(Amezquita et al. 2020)</span> to include an additional
-container for networks associated with assay features.</p>
+container for networks associated with <strong>assay features</strong>
+(graphs representing columns, such as samples and cells, are not
+supported by this package).</p>
+<p>Of note, trees are an alternative way of representing how assay
+features are related to each other. Users interested in tree
+representations of assays rows/columns can use the <em><a href="https://bioconductor.org/packages/3.23/TreeSummarizedExperiment" class="external-link">TreeSummarizedExperiment</a></em>
+package. Trees are essentially <em>a kind of graph</em> (i.e., all trees
+are graphs, but not all graphs are trees). Here, we chose to use a more
+general graph representation (namely <code>igraph</code> objects) to
+provide users and developers with more flexibility.</p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p><code>GraphExperiment</code> can be installed from Bioconductor with
+the following code:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">'BiocManager'</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'BiocManager'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"GraphExperiment"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Load package after installation</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/GraphExperiment" class="external-link">GraphExperiment</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">777</span><span class="op">)</span> <span class="co"># for reproducibility</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="anatomy-of-a-graphexperiment-object">Anatomy of a <code>GraphExperiment</code> object<a class="anchor" aria-label="anchor" href="#anatomy-of-a-graphexperiment-object"></a>
@@ -116,7 +141,21 @@ dimensions, such as PCA, t-SNE, and UMAP embeddings.</li>
 <ul>
 <li>
 <code>graphs</code>: list of <code>igraph</code> objects containing
-graphs, including (but optional) node and edge attributes.</li>
+graphs, including (but optional) node and edge attributes. Graphs are
+used to represent how features (rows, not columns) relate to each
+other.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;&lt;strong&gt;Note on software design:&lt;/strong&gt; if you’re
+familiar with &lt;code&gt;SingleCellExperiment&lt;/code&gt; objects, you probably
+know that it offers a &lt;code&gt;rowPairs&lt;/code&gt; slot to store pairwise
+relationships between rows of assays. In theory, some of the data stored
+in &lt;code&gt;graphs&lt;/code&gt; (of a &lt;code&gt;GraphExperiment&lt;/code&gt; object) could
+be stored in &lt;code&gt;rowPairs&lt;/code&gt; (of a
+&lt;code&gt;SingleCellExperiment&lt;/code&gt;). However, we chose to implement a
+dedicated slot with &lt;code&gt;igraph&lt;/code&gt; objects to guarantee (i)
+seamless interoperability with other packages, given that
+&lt;code&gt;igraph&lt;/code&gt; is the de facto standard class for graphs in R; and
+(ii) convenience in methods (e.g., subsetting, integration with
+&lt;code&gt;rowData&lt;/code&gt;, integration across multiple graphs, etc).&lt;/p&gt;"><sup>1</sup></a>
+</li>
 </ul>
 <div class="figure">
 <img src="GraphExperiment.png" class="r-plt" alt="The GraphExperiment class." width="100%"><p class="caption">
@@ -137,11 +176,8 @@ using the constructor function <code><a href="../reference/GraphExperiment.html"
 will simulate a scRNA-seq count matrix with some gene (row) and cell
 (column) metadata, and create a graph based on gene-gene
 correlations.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/almeidasilvaf/GraphExperiment" class="external-link">GraphExperiment</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">777</span><span class="op">)</span> <span class="co"># for reproducibility</span></span>
-<span></span>
-<span><span class="co"># Simulate parts of a `GraphExperiment` object</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Simulate parts of a `GraphExperiment` object</span></span>
 <span><span class="co">## Assays</span></span>
 <span><span class="va">gene_ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cell_ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"cell"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span></span>
@@ -189,9 +225,9 @@ correlations.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/set_vertex_attr.html" class="external-link">set_vertex_attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">"degree"</span>, value <span class="op">=</span> <span class="fu"><a href="https://r.igraph.org/reference/strength.html" class="external-link">strength</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">g</span></span>
-<span><span class="co">#&gt; IGRAPH 2074db4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 2c53993 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 2074db4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 2c53993 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -203,7 +239,7 @@ correlations.</p>
 <span><span class="co">#&gt; + ... omitted several edges</span></span></code></pre></div>
 <p>To create a <code>GraphExperiment</code> object from the constructor
 function, you would run:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a `GraphExperiment` object</span></span>
 <span><span class="va">ge</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GraphExperiment.html">GraphExperiment</a></span><span class="op">(</span></span>
 <span>    assays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">mat</span><span class="op">)</span>,</span>
@@ -235,7 +271,7 @@ in the last row, which indicates that this object contains a
 names need to be the same</strong>. For example, attempting to create a
 <code>GraphExperiment</code> object with some features from
 <code>rownames</code> missing would lead to an error:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove 'gene1' to 'gene10' from the graph and try to recreate object</span></span>
 <span><span class="va">g2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/delete_vertices.html" class="external-link">delete_vertices</a></span><span class="op">(</span><span class="va">g</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment.html">GraphExperiment</a></span><span class="op">(</span></span>
@@ -250,7 +286,7 @@ names need to be the same</strong>. For example, attempting to create a
 <p>Alternatively, you can create a <code>GraphExperiment</code> object
 by coercing from an existing <code>(Ranged)SummarizedExperiment</code>
 or <code>SingleCellExperiment</code> object. For example:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Coercing from `SummarizedExperiment`</span></span>
 <span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu">SummarizedExperiment</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">mat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">ge1</span> <span class="op">&lt;-</span> <span class="fu">as</span><span class="op">(</span><span class="va">se</span>, <span class="st">"GraphExperiment"</span><span class="op">)</span></span>
@@ -270,7 +306,7 @@ or <code>SingleCellExperiment</code> object. For example:</p>
 <p>Note that the <code>graphs</code> container is still there, but
 empty. To access the names of all graphs, you will use the
 <code><a href="../reference/GraphExperiment-methods.html">graphNames()</a></code> function.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get graph names</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graphNames</a></span><span class="op">(</span><span class="va">ge</span><span class="op">)</span>      <span class="co"># 'cor'</span></span>
 <span><span class="co">#&gt; [1] "cor"</span></span>
@@ -296,7 +332,7 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 </ul>
 <p>The design here is equivalent to <code>assays()</code> versus
 <code>assay()</code> for <code>SummarizedExperiment</code> objects.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get graphs</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graphs</a></span><span class="op">(</span><span class="va">ge</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of length 1</span></span>
@@ -304,10 +340,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get first graph by index</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 2074db4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 2c53993 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 2074db4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 2c53993 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -319,10 +355,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get first graph by index (alternative)</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graphs</a></span><span class="op">(</span><span class="va">ge</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; IGRAPH 2074db4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 2c53993 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 2074db4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 2c53993 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -334,10 +370,10 @@ can be a numeric scalar (index) or a character scalar (name).</li>
 <span></span>
 <span><span class="co"># Get graph by name</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="st">"cor"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH 2074db4 UNW- 200 20096 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 2c53993 UNW- 200 20096 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from 2074db4 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 2c53993 (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10</span></span>
 <span><span class="co">#&gt; [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15</span></span>
@@ -354,7 +390,7 @@ them to node attributes. The same happens in the other direction: the
 <code><a href="../reference/GraphExperiment-methods.html">rowData()</a></code> method for <code>GraphExperiment</code> objects
 automatically adds node attributes (if any) to <code>rowData</code>
 variables.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># `graphs` and `rowData` are always in sync!</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">rowData</a></span><span class="op">(</span><span class="va">ge</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DataFrame with 200 rows and 3 columns</span></span>
@@ -387,7 +423,7 @@ method. Such methods allow users to modify elements by adding
 <code>&lt;-</code> after the getter method. For example, to add or
 replace a particular graph, you would use the <code>graph&lt;-</code>
 method as follows:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Create a new graph without correlations between -0.4 and 0.4</span></span>
 <span><span class="va">fg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge</span>, <span class="st">"cor"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://r.igraph.org/reference/delete_vertex_attr.html" class="external-link">delete_vertex_attr</a></span><span class="op">(</span><span class="st">"pathway"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -397,9 +433,9 @@ method as follows:</p>
 <span><span class="va">todelete</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/E.html" class="external-link">E</a></span><span class="op">(</span><span class="va">fg</span><span class="op">)</span><span class="op">$</span><span class="va">weight</span><span class="op">)</span> <span class="op">&lt;</span><span class="fl">0.4</span></span>
 <span><span class="va">fg</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/delete_edges.html" class="external-link">delete_edges</a></span><span class="op">(</span><span class="va">fg</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">todelete</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fg</span></span>
-<span><span class="co">#&gt; IGRAPH b481819 UNW- 200 202 -- </span></span>
+<span><span class="co">#&gt; IGRAPH c6571bb UNW- 200 202 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), weight (e/n)</span></span>
-<span><span class="co">#&gt; + edges from b481819 (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from c6571bb (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1 --gene1  gene2 --gene2  gene3 --gene3  gene4 --gene4  gene5 --gene5 </span></span>
 <span><span class="co">#&gt;  [6] gene6 --gene6  gene7 --gene7  gene8 --gene8  gene9 --gene9  gene10--gene10</span></span>
 <span><span class="co">#&gt; [11] gene11--gene11 gene12--gene12 gene13--gene13 gene14--gene14 gene15--gene15</span></span>
@@ -429,7 +465,7 @@ method as follows:</p>
 <code>graphs&lt;-</code> setter. For example, let’s add a few graphs to
 the <code>GraphExperiment</code> object we created before by coercing
 from <code>SummarizedExperiment</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Taking a quick look (note: nothing in `graphs`)</span></span>
 <span><span class="va">ge1</span></span>
 <span><span class="co">#&gt; class: GraphExperiment </span></span>
@@ -463,7 +499,7 @@ from <code>SummarizedExperiment</code>:</p>
 <span><span class="co">#&gt; graphs(2): cor fcor</span></span></code></pre></div>
 <p>Lastly, you can also rename graphs by updating
 <code>graphNames</code> as follows:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Rename graphs</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graphNames</a></span><span class="op">(</span><span class="va">ge1</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlations"</span>, <span class="st">"correlations_filtered_0.4"</span><span class="op">)</span></span>
 <span><span class="va">ge1</span></span>
@@ -496,7 +532,7 @@ rows, subsetting rows of a <code>GraphExperiment</code> object
 automatically subsets rows of the <code>assays</code>,
 <code>rowData</code>, and all graphs in <code>graphs</code>. For
 example:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Subsetting `GraphExperiment` object</span></span>
 <span><span class="va">ge_subset</span> <span class="op">&lt;-</span> <span class="va">ge</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span></span>
 <span></span>
@@ -514,10 +550,10 @@ example:</p>
 <span><span class="co">#&gt; altExpNames(0):</span></span>
 <span><span class="co">#&gt; graphs(2): cor fcor</span></span>
 <span><span class="fu"><a href="../reference/GraphExperiment-methods.html">graph</a></span><span class="op">(</span><span class="va">ge_subset</span>, <span class="st">"cor"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; IGRAPH efe166e UNW- 10 55 -- </span></span>
+<span><span class="co">#&gt; IGRAPH 9ba619c UNW- 10 55 -- </span></span>
 <span><span class="co">#&gt; + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight</span></span>
 <span><span class="co">#&gt; | (e/n)</span></span>
-<span><span class="co">#&gt; + edges from efe166e (vertex names):</span></span>
+<span><span class="co">#&gt; + edges from 9ba619c (vertex names):</span></span>
 <span><span class="co">#&gt;  [1] gene1--gene1 gene1--gene2 gene2--gene2 gene1--gene3 gene2--gene3</span></span>
 <span><span class="co">#&gt;  [6] gene3--gene3 gene1--gene4 gene2--gene4 gene3--gene4 gene4--gene4</span></span>
 <span><span class="co">#&gt; [11] gene1--gene5 gene2--gene5 gene3--gene5 gene4--gene5 gene5--gene5</span></span>
@@ -531,11 +567,11 @@ example:</p>
 <h2 class="unnumbered" id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
 <p>This document was created under the following conditions:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://sessioninfo.r-lib.org/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Session info ───────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">setting </span> <span style="color: #555555; font-style: italic;">value</span></span></span>
-<span><span class="co">#&gt;  version  R Under development (unstable) (2026-03-15 r89629)</span></span>
+<span><span class="co">#&gt;  version  R Under development (unstable) (2026-04-09 r89849)</span></span>
 <span><span class="co">#&gt;  os       Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">#&gt;  system   x86_64, linux-gnu</span></span>
 <span><span class="co">#&gt;  ui       X11</span></span>
@@ -543,9 +579,9 @@ example:</p>
 <span><span class="co">#&gt;  collate  en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  ctype    en_US.UTF-8</span></span>
 <span><span class="co">#&gt;  tz       UTC</span></span>
-<span><span class="co">#&gt;  date     2026-03-18</span></span>
-<span><span class="co">#&gt;  pandoc   3.9 @ /usr/bin/ (via rmarkdown)</span></span>
-<span><span class="co">#&gt;  quarto   1.8.27 @ /usr/local/bin/quarto</span></span>
+<span><span class="co">#&gt;  date     2026-04-10</span></span>
+<span><span class="co">#&gt;  pandoc   3.9.0.2 @ /usr/bin/ (via rmarkdown)</span></span>
+<span><span class="co">#&gt;  quarto   1.9.37 @ /usr/local/bin/quarto</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB; font-weight: bold;">─ Packages ───────────────────────────────────────────────────────────────────</span></span></span>
 <span><span class="co">#&gt;  <span style="color: #555555; font-style: italic;">package             </span> <span style="color: #555555; font-style: italic;">*</span> <span style="color: #555555; font-style: italic;">version</span> <span style="color: #555555; font-style: italic;">date (UTC)</span> <span style="color: #555555; font-style: italic;">lib</span> <span style="color: #555555; font-style: italic;">source</span></span></span>
@@ -553,57 +589,57 @@ example:</p>
 <span><span class="co">#&gt;  Biobase              * 2.71.0  <span style="color: #555555;">2025-10-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
 <span><span class="co">#&gt;  BiocBaseUtils          1.13.0  <span style="color: #555555;">2025-10-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
 <span><span class="co">#&gt;  BiocGenerics         * 0.57.0  <span style="color: #555555;">2025-10-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  BiocManager            1.30.27 <span style="color: #555555;">2025-11-14</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  BiocManager            1.30.27 <span style="color: #555555;">2025-11-14</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  BiocStyle            * 2.39.0  <span style="color: #555555;">2025-10-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
 <span><span class="co">#&gt;  bookdown               0.46    <span style="color: #555555;">2025-12-05</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  bslib                  0.10.0  <span style="color: #555555;">2026-01-26</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  cachem                 1.1.0   <span style="color: #555555;">2024-05-16</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  cli                    3.6.5   <span style="color: #555555;">2025-04-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  DelayedArray           0.37.0  <span style="color: #555555;">2025-10-31</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  desc                   1.4.3   <span style="color: #555555;">2023-12-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  digest                 0.6.39  <span style="color: #555555;">2025-11-19</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  evaluate               1.0.5   <span style="color: #555555;">2025-08-27</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  fastmap                1.2.0   <span style="color: #555555;">2024-05-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  fs                     1.6.7   <span style="color: #555555;">2026-03-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  bslib                  0.10.0  <span style="color: #555555;">2026-01-26</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  cachem                 1.1.0   <span style="color: #555555;">2024-05-16</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  cli                    3.6.6   <span style="color: #555555;">2026-04-09</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  DelayedArray           0.37.1  <span style="color: #555555;">2026-03-31</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  desc                   1.4.3   <span style="color: #555555;">2023-12-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  digest                 0.6.39  <span style="color: #555555;">2025-11-19</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  evaluate               1.0.5   <span style="color: #555555;">2025-08-27</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  fastmap                1.2.0   <span style="color: #555555;">2024-05-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  fs                     2.0.1   <span style="color: #555555;">2026-03-24</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  generics             * 0.1.4   <span style="color: #555555;">2025-05-09</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  GenomicRanges        * 1.63.1  <span style="color: #555555;">2025-12-08</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  glue                   1.8.0   <span style="color: #555555;">2024-09-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  GraphExperiment      * 0.99.0  <span style="color: #555555;">2026-03-18</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
-<span><span class="co">#&gt;  htmltools              0.5.9   <span style="color: #555555;">2025-12-04</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  htmlwidgets            1.6.4   <span style="color: #555555;">2023-12-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  igraph               * 2.2.2   <span style="color: #555555;">2026-02-12</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  GenomicRanges        * 1.63.2  <span style="color: #555555;">2026-04-07</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  glue                   1.8.0   <span style="color: #555555;">2024-09-30</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  GraphExperiment      * 0.99.1  <span style="color: #555555;">2026-04-10</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor</span></span></span>
+<span><span class="co">#&gt;  htmltools              0.5.9   <span style="color: #555555;">2025-12-04</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  htmlwidgets            1.6.4   <span style="color: #555555;">2023-12-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  igraph               * 2.2.3   <span style="color: #555555;">2026-04-07</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  IRanges              * 2.45.0  <span style="color: #555555;">2025-10-31</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  jquerylib              0.1.4   <span style="color: #555555;">2021-04-26</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  jsonlite               2.0.0   <span style="color: #555555;">2025-03-27</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  knitr                  1.51    <span style="color: #555555;">2025-12-20</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  lattice                0.22-9  <span style="color: #555555;">2026-02-09</span> <span style="color: #555555;">[3]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  lifecycle              1.0.5   <span style="color: #555555;">2026-01-08</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  magrittr               2.0.4   <span style="color: #555555;">2025-09-12</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  Matrix                 1.7-4   <span style="color: #555555;">2025-08-28</span> <span style="color: #555555;">[3]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  jquerylib              0.1.4   <span style="color: #555555;">2021-04-26</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  jsonlite               2.0.0   <span style="color: #555555;">2025-03-27</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  knitr                  1.51    <span style="color: #555555;">2025-12-20</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  lattice                0.22-9  <span style="color: #555555;">2026-02-09</span> <span style="color: #555555;">[3]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  lifecycle              1.0.5   <span style="color: #555555;">2026-01-08</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  magrittr               2.0.5   <span style="color: #555555;">2026-04-04</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  Matrix                 1.7-5   <span style="color: #555555;">2026-03-21</span> <span style="color: #555555;">[3]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  MatrixGenerics       * 1.23.0  <span style="color: #555555;">2025-10-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
 <span><span class="co">#&gt;  matrixStats          * 1.5.0   <span style="color: #555555;">2025-01-07</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  otel                   0.2.0   <span style="color: #555555;">2025-08-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  pillar                 1.11.1  <span style="color: #555555;">2025-09-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  pkgconfig              2.0.3   <span style="color: #555555;">2019-09-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  pkgdown                2.2.0   <span style="color: #555555;">2025-11-06</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  R6                     2.6.1   <span style="color: #555555;">2025-02-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  ragg                   1.5.1   <span style="color: #555555;">2026-03-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  rlang                  1.1.7   <span style="color: #555555;">2026-01-09</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  rmarkdown              2.30    <span style="color: #555555;">2025-09-28</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  otel                   0.2.0   <span style="color: #555555;">2025-08-29</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  pillar                 1.11.1  <span style="color: #555555;">2025-09-17</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  pkgconfig              2.0.3   <span style="color: #555555;">2019-09-22</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  pkgdown                2.2.0   <span style="color: #555555;">2025-11-06</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  R6                     2.6.1   <span style="color: #555555;">2025-02-15</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  ragg                   1.5.2   <span style="color: #555555;">2026-03-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  rlang                  1.2.0   <span style="color: #555555;">2026-04-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  rmarkdown              2.31    <span style="color: #555555;">2026-03-26</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  S4Arrays               1.11.1  <span style="color: #555555;">2025-11-25</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  S4Vectors            * 0.49.0  <span style="color: #555555;">2025-10-30</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  sass                   0.4.10  <span style="color: #555555;">2025-04-11</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  S4Vectors            * 0.49.1  <span style="color: #555555;">2026-04-05</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  sass                   0.4.10  <span style="color: #555555;">2025-04-11</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  Seqinfo              * 1.1.0   <span style="color: #555555;">2025-10-31</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  sessioninfo            1.2.3   <span style="color: #555555;">2025-02-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  SingleCellExperiment * 1.33.1  <span style="color: #555555;">2026-03-10</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  SparseArray            1.11.11 <span style="color: #555555;">2026-03-08</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  sessioninfo            1.2.3   <span style="color: #555555;">2025-02-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  SingleCellExperiment * 1.33.2  <span style="color: #555555;">2026-03-24</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  SparseArray            1.11.13 <span style="color: #555555;">2026-04-01</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  SummarizedExperiment * 1.41.1  <span style="color: #555555;">2026-02-06</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  systemfonts            1.3.2   <span style="color: #555555;">2026-03-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  textshaping            1.0.5   <span style="color: #555555;">2026-03-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  vctrs                  0.7.1   <span style="color: #555555;">2026-01-23</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  xfun                   0.56    <span style="color: #555555;">2026-01-18</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  systemfonts            1.3.2   <span style="color: #555555;">2026-03-05</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  textshaping            1.0.5   <span style="color: #555555;">2026-03-06</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  vctrs                  0.7.2   <span style="color: #555555;">2026-03-21</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
+<span><span class="co">#&gt;  xfun                   0.57    <span style="color: #555555;">2026-03-20</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt;  XVector                0.51.0  <span style="color: #555555;">2025-10-31</span> <span style="color: #555555;">[1]</span> <span style="color: #555555;">Bioconductor 3.23 (R 4.6.0)</span></span></span>
-<span><span class="co">#&gt;  yaml                   2.3.12  <span style="color: #555555;">2025-12-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.6.0)</span></span></span>
+<span><span class="co">#&gt;  yaml                   2.3.12  <span style="color: #555555;">2025-12-10</span> <span style="color: #555555;">[2]</span> <span style="color: #555555;">CRAN (R 4.7.0)</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [1] /__w/_temp/Library</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;"> [2] /usr/local/lib/R/site-library</span></span></span>
@@ -623,6 +659,7 @@ Amezquita, Robert, Aaron Lun, Etienne Becht, et al. 2020.
 </div>
 </div>
 </div>
+
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
