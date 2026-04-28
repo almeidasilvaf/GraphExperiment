@@ -1,6 +1,6 @@
 Package: GraphExperiment
 Title: S4 Class for Quantitative Data and Associated Networks 
-Version: 0.99.1
+Version: 1.0.0
 Date: 2026-03-01
 Authors@R: 
     c(
