@@ -2,4 +2,4 @@
 
 ### All vignettes
 
-- [Introduction to the \*GraphExperiment\* class](GraphExperiment.md):
+- [Introduction to the GraphExperiment class](GraphExperiment.md):

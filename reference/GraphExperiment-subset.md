@@ -37,9 +37,12 @@ gene_ids <- paste0("gene", seq_len(200))
 cell_ids <- paste0("cell", seq_len(100))
 mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
 
-## Graph (with node attributes)
+## rowGraph (with node attributes)
 g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 V(g)$degree <- igraph::strength(g)
+
+## colGraph
+g2 <- graph_from_adjacency_matrix(cor(mat), weighted = TRUE)
 
 ## rowData
 rdata <- data.frame(
@@ -48,12 +51,20 @@ rdata <- data.frame(
     coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
 )
 
+## colData
+cdata <- data.frame(
+    row.names = cell_ids, 
+    celltype = sample(c("ct1", "ct2"), size = length(cell_ids), replace = TRUE)
+)
+
 
 # Create a GraphExperiment object
 ge <- GraphExperiment(
     assays = list(counts = mat), 
     rowData = rdata,
-    graphs = list(cor = g)
+    colData = cdata,
+    rowGraphs = list(cor = g),
+    colGraphs = list(cellcor = g2)
 )
 ge
 #> class: GraphExperiment 
@@ -63,11 +74,12 @@ ge
 #> rownames(200): gene1 gene2 ... gene199 gene200
 #> rowData names(3): pathway coding cor__degree
 #> colnames(100): cell1 cell2 ... cell99 cell100
-#> colData names(0):
+#> colData names(1): celltype
 #> reducedDimNames(0):
 #> mainExpName: NULL
 #> altExpNames(0):
-#> graphs(1): cor
+#> rowGraphs(1): cor
+#> colGraphs(1): cellcor
 
 # Subset object
 ge[1:5, 1:5]
@@ -76,11 +88,12 @@ ge[1:5, 1:5]
 #> metadata(0):
 #> assays(1): counts
 #> rownames(5): gene1 gene2 gene3 gene4 gene5
-#> rowData names(5): pathway coding cor__degree cor__pathway cor__coding
+#> rowData names(3): pathway coding cor__degree
 #> colnames(5): cell1 cell2 cell3 cell4 cell5
-#> colData names(0):
+#> colData names(1): celltype
 #> reducedDimNames(0):
 #> mainExpName: NULL
 #> altExpNames(0):
-#> graphs(1): cor
+#> rowGraphs(1): cor
+#> colGraphs(1): cellcor
 ```

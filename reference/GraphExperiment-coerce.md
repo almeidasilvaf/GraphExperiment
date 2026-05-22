@@ -38,7 +38,8 @@ as(se, "GraphExperiment")
 #> reducedDimNames(0):
 #> mainExpName: NULL
 #> altExpNames(0):
-#> graphs(0):
+#> rowGraphs(0):
+#> colGraphs(0):
 
 # Coerce from `RangedSummarizedExperiment`
 rse <- as(se, "RangedSummarizedExperiment")
@@ -54,7 +55,8 @@ as(rse, "GraphExperiment")
 #> reducedDimNames(0):
 #> mainExpName: NULL
 #> altExpNames(0):
-#> graphs(0):
+#> rowGraphs(0):
+#> colGraphs(0):
 
 # Coerce from `SingleCellExperiment`
 sce <- as(se, "SingleCellExperiment")
@@ -70,5 +72,6 @@ as(sce, "GraphExperiment")
 #> reducedDimNames(0):
 #> mainExpName: NULL
 #> altExpNames(0):
-#> graphs(0):
+#> rowGraphs(0):
+#> colGraphs(0):
 ```

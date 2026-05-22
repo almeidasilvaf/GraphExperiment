@@ -2,10 +2,11 @@
 
 **GraphExperiment** provides users and developers with infrastructure to
 store quantitative data from omics assays along with networks
-representing how features (e.g., genes, proteins, metabolites) interact
-with each other. The `GraphExperiment` S4 class extends
-`SingleCellExperiment` to include support for `igraph` objects
-associated with features.
+representing how assay features (e.g., genes, proteins, metabolites)
+and/or observations (e.g., samples, cells, species) interact with each
+other. The `GraphExperiment` S4 class extends `SingleCellExperiment` to
+include support for `igraph` objects associated with features (stored in
+`rowGraphs`) and observations (stored in `colGraphs`).
 
 The figure belows summarizes the `GraphExperiment` class in comparison
 to the `SingleCellExperiment` class.
@@ -39,7 +40,7 @@ print(citation('GraphExperiment'), bibtex = TRUE)
 #> To cite package 'GraphExperiment' in publications use:
 #> 
 #>   Almeida-Silva F, Van de Peer Y (2026). _GraphExperiment: S4 Class for
-#>   Quantitative Data and Associated Networks_. R package version 0.99.1,
+#>   Quantitative Data and Associated Networks_. R package version 1.1.1,
 #>   <https://github.com/almeidasilvaf/GraphExperiment>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -48,7 +49,7 @@ print(citation('GraphExperiment'), bibtex = TRUE)
 #>     title = {GraphExperiment: S4 Class for Quantitative Data and Associated Networks},
 #>     author = {Fabricio Almeida-Silva and Yves {Van de Peer}},
 #>     year = {2026},
-#>     note = {R package version 0.99.1},
+#>     note = {R package version 1.1.1},
 #>     url = {https://github.com/almeidasilvaf/GraphExperiment},
 #>   }
 ```
