@@ -7,6 +7,7 @@ setMethod(
     "show", "GraphExperiment",
     function(object) {
         callNextMethod()
-        coolcat("graphs(%d): %s\n", graphNames(object))
+        coolcat("rowGraphs(%d): %s\n", rowGraphNames(object))
+        coolcat("colGraphs(%d): %s\n", colGraphNames(object))
     }
 )

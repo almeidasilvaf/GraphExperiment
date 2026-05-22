@@ -2,43 +2,74 @@
 % Please edit documentation in R/GraphExperiment-methods.R
 \name{GraphExperiment-methods}
 \alias{GraphExperiment-methods}
-\alias{graphs}
-\alias{graphs<-}
-\alias{graph}
-\alias{graph<-}
-\alias{graphNames}
-\alias{graphNames<-}
+\alias{rowGraphs}
+\alias{rowGraphs<-}
+\alias{colGraphs}
+\alias{colGraphs<-}
+\alias{rowGraph}
+\alias{rowGraph<-}
+\alias{colGraph}
+\alias{colGraph<-}
+\alias{rowGraphNames}
+\alias{rowGraphNames<-}
+\alias{colGraphNames}
+\alias{colGraphNames<-}
 \alias{rowData}
+\alias{colData}
 \alias{rowData,GraphExperiment-method}
-\alias{graphs,GraphExperiment-method}
-\alias{graph,GraphExperiment,missing-method}
-\alias{graph,GraphExperiment,ANY-method}
-\alias{graphNames,GraphExperiment-method}
-\alias{graphs<-,GraphExperiment-method}
-\alias{graph<-,GraphExperiment-method}
-\alias{graphNames<-,GraphExperiment,character-method}
+\alias{colData,GraphExperiment-method}
+\alias{rowGraphs,GraphExperiment-method}
+\alias{colGraphs,GraphExperiment-method}
+\alias{rowGraph,GraphExperiment,missing-method}
+\alias{rowGraph,GraphExperiment,ANY-method}
+\alias{colGraph,GraphExperiment,missing-method}
+\alias{colGraph,GraphExperiment,ANY-method}
+\alias{rowGraphNames,GraphExperiment-method}
+\alias{colGraphNames,GraphExperiment-method}
+\alias{rowGraphs<-,GraphExperiment-method}
+\alias{colGraphs<-,GraphExperiment-method}
+\alias{rowGraph<-,GraphExperiment-method}
+\alias{colGraph<-,GraphExperiment-method}
+\alias{rowGraphNames<-,GraphExperiment,character-method}
+\alias{colGraphNames<-,GraphExperiment,character-method}
 \title{Methods for \code{GraphExperiment} objects}
 \usage{
 \S4method{rowData}{GraphExperiment}(x, use.names = TRUE, ...)
 
-\S4method{graphs}{GraphExperiment}(x)
+\S4method{colData}{GraphExperiment}(x, use.names = TRUE, ...)
 
-\S4method{graph}{GraphExperiment,missing}(x, i)
+\S4method{rowGraphs}{GraphExperiment}(x)
 
-\S4method{graph}{GraphExperiment,ANY}(x, i)
+\S4method{colGraphs}{GraphExperiment}(x)
 
-\S4method{graphNames}{GraphExperiment}(x)
+\S4method{rowGraph}{GraphExperiment,missing}(x, i)
 
-\S4method{graphs}{GraphExperiment}(x) <- value
+\S4method{rowGraph}{GraphExperiment,ANY}(x, i)
 
-\S4method{graph}{GraphExperiment}(x, i) <- value
+\S4method{colGraph}{GraphExperiment,missing}(x, i)
 
-\S4method{graphNames}{GraphExperiment,character}(x) <- value
+\S4method{colGraph}{GraphExperiment,ANY}(x, i)
+
+\S4method{rowGraphNames}{GraphExperiment}(x)
+
+\S4method{colGraphNames}{GraphExperiment}(x)
+
+\S4method{rowGraphs}{GraphExperiment}(x) <- value
+
+\S4method{colGraphs}{GraphExperiment}(x) <- value
+
+\S4method{rowGraph}{GraphExperiment}(x, i) <- value
+
+\S4method{colGraph}{GraphExperiment}(x, i) <- value
+
+\S4method{rowGraphNames}{GraphExperiment,character}(x) <- value
+
+\S4method{colGraphNames}{GraphExperiment,character}(x) <- value
 }
 \arguments{
 \item{x}{A \code{GraphExperiment} object.}
 
-\item{use.names}{Passed to the \code{rowData} method of
+\item{use.names}{Passed to the \code{colData} method of
 \code{SingleCellExperiment}. Default: TRUE.}
 
 \item{...}{Ignored.}
@@ -53,35 +84,36 @@ Return values depend on the method. See details and examples.
 }
 \description{
 The \code{GraphExperiment} class provides users with methods to get and
-set graphs (\code{igraph} objects) representing how features of
-\code{SingleCellExperiment} objects relate to
-each other.
+set graphs (\code{igraph} objects) representing how features and observations
+of \code{SingleCellExperiment} objects relate to each other.
 }
-\section{graphs and graph methods}{
+\section{rowGraphs/colGraphs and rowGraph/colGraph methods}{
 
 \describe{
-\item{\code{graphs(x)}: }{
-Getter for a \code{SimpleList} of \code{igraph} objects.}
-\item{\code{graphs(x) <- value}: }{
+\item{\code{rowGraphs(x)} and \code{colGraphs(x)}: }{
+Getter for a \code{SimpleList} of \code{igraph} objects representing
+rows and columns, respectively.}
+\item{\code{rowGraphs(x) <- value} and \code{colGraphs(x) <- value}: }{
 Setter for a SimpleList or list (coerced to SimpleList) of \code{igraph}
-objects.}
-\item{\code{graph(x, i)}: }{
+objects representing rows and columns, respectively.}
+\item{\code{rowGraph(x, i)} and \code{colGraph(x, i)}: }{
 Getter for an \code{igraph} object containing graph \code{i} from the list
-stored in \code{graphs}.}
-\item{\code{graph(x, i) <- value}: }{
-Setter for an \code{igraph} object to be stored in element \code{i} of the
-list \code{graphs}}
+stored in \code{rowGraphs} and \code{colGraphs}, respectively.}
+\item{\code{rowGraph(x, i) <- value} and \code{colGraph(x, i) <- value}: }{
+Setter for an \code{igraph} object to be stored in element \code{i} of
+\code{rowGraphs} and \code{colGraphs}.}
 }
 }
 
-\section{graphNames methods}{
+\section{rowGraphNames and colGraphNames methods}{
 
 \describe{
-\item{\code{graphNames(x)}: }{
-Getter to extract names of graphs in the \code{graphs} slot.}
-\item{\code{graphNames(x) <-  value}: }{
-Setter to assign new names to the graphs stored in the \code{graphs}
-slot.}
+\item{\code{rowGraphNames(x)} and \code{colGraphNames(x)}: }{
+Getter to extract names of graphs in \code{rowGraphs}
+and \code{colGraphs}.}
+\item{\code{rowGraphNames(x) <- value} and \code{colGraphNames(x) <- value}: }{
+Setter to assign new names to the graphs stored in \code{rowGraphs}
+and \code{colGraphs}.}
 }
 }
 
@@ -94,6 +126,15 @@ but with node attributes of graphs included.}
 }
 }
 
+\section{colData method}{
+
+\describe{
+\item{\code{colData(x)}: }{
+Getter to extract colData (as in \code{SingleCellExperiment} objects),
+but with node attributes of graphs included.}
+}
+}
+
 \examples{
 # Simulate elements of a GraphExperiment object
 ## Assays
@@ -101,9 +142,12 @@ gene_ids <- paste0("gene", seq_len(200))
 cell_ids <- paste0("cell", seq_len(100))
 mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
 
-## Graph (with node attributes)
+## rowGraph (with node attributes)
 g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 V(g)$degree <- igraph::strength(g)
+
+## colGraph
+g2 <- graph_from_adjacency_matrix(cor(mat), weighted = TRUE)
 
 ## rowData
 rdata <- data.frame(
@@ -112,36 +156,52 @@ rdata <- data.frame(
     coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
 )
 
+## colData
+cdata <- data.frame(
+    row.names = cell_ids, 
+    celltype = sample(c("ct1", "ct2"), size = length(cell_ids), replace = TRUE)
+)
+
 
 # Create a GraphExperiment object
 ge <- GraphExperiment(
     assays = list(counts = mat), 
     rowData = rdata,
-    graphs = list(cor = g)
+    colData = cdata,
+    rowGraphs = list(cor = g),
+    colGraphs = list(cellcor = g2)
 )
 ge
 
 # Extract graph names
-graphNames(ge)
-ge
+rowGraphNames(ge)
+colGraphNames(ge)
+
 
 # Extract graphs
-graphs(ge)
-graph(ge, "cor")
+rowGraphs(ge)
+rowGraph(ge, "cor")
+
+colGraphs(ge)
+colGraph(ge, "cellcor")
+
 
 # Add a new graph
-graph(ge, "newcor") <- g
+rowGraph(ge, "newcor") <- g
 ge
 
 # Add a list of graphs
-graphs(ge) <- list(cor = g, newcor = g)
+colGraphs(ge) <- list(cellcor = g2, new_cellcor = g2)
 ge
 
 # Replace graph names
-graphNames(ge) <- c("network1", "network2")
+rowGraphNames(ge) <- c("network1", "network2")
 ge
 
 # Access rowData (note: rowData + node attributes combined)
 rowData(ge)
+
+# Access colData (note: colData + node attributes combined)
+colData(ge)
 
 }

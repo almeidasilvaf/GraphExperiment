@@ -28,9 +28,12 @@
 #' cell_ids <- paste0("cell", seq_len(100))
 #' mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
 #' 
-#' ## Graph (with node attributes)
+#' ## rowGraph (with node attributes)
 #' g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 #' V(g)$degree <- igraph::strength(g)
+#' 
+#' ## colGraph
+#' g2 <- graph_from_adjacency_matrix(cor(mat), weighted = TRUE)
 #' 
 #' ## rowData
 #' rdata <- data.frame(
@@ -39,12 +42,20 @@
 #'     coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
 #' )
 #' 
+#' ## colData
+#' cdata <- data.frame(
+#'     row.names = cell_ids, 
+#'     celltype = sample(c("ct1", "ct2"), size = length(cell_ids), replace = TRUE)
+#' )
+#' 
 #' 
 #' # Create a GraphExperiment object
 #' ge <- GraphExperiment(
 #'     assays = list(counts = mat), 
 #'     rowData = rdata,
-#'     graphs = list(cor = g)
+#'     colData = cdata,
+#'     rowGraphs = list(cor = g),
+#'     colGraphs = list(cellcor = g2)
 #' )
 #' ge
 #' 
@@ -62,17 +73,26 @@ setMethod(
         if(missing(i)) i <- TRUE
         if(missing(j)) j <- TRUE
         
-        glist <- graphs(x)
+        rglist <- rowGraphs(x)
+        cglist <- colGraphs(x)
         x <- callNextMethod(x, i, j, ..., drop = drop)
         
-        if(length(glist) > 0 || !isTRUE(i)) {
+        ## Rows
+        if(length(rglist) > 0 || !isTRUE(i)) {
             keep <- rownames(x)
-            fglist <- SimpleList(lapply(glist, function(g) {
+            rglist <- SimpleList(lapply(rglist, function(g) {
                 induced_subgraph(g, vids = keep)
             }))
-            graphs(x) <- fglist
         }
         
-        return(x)
+        ## Cols
+        if(length(cglist) > 0 || !isTRUE(j)) {
+            keep <- colnames(x)
+            cglist <- SimpleList(lapply(cglist, function(g) {
+                induced_subgraph(g, vids = keep)
+            }))
+        }
+        
+        BiocBaseUtils::setSlots(x, rowGraphs = rglist, colGraphs = cglist)
     }
 )

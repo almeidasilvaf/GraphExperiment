@@ -17,13 +17,14 @@ Authors@R:
     )
 Description: GraphExperiment provides users and developers with an S4 class
     that extends `SingleCellExperiment` by offering infrastructure to
-    store and retrieve networks (`igraph` objects) representing how features
-    are associated with each other. The class was designed to store networks
-    inferred from high-dimensional quantitative data, including gene 
-    coexpression networks (GCNs), gene regulatory networks (GRNs), and
-    co-abundance networks (from proteomics and metabolomics), as well as
-    networks inferred from other types of data (e.g., protein-protein 
-    interactions).
+    store and retrieve networks (`igraph` objects) representing how assay 
+    features and/or observations are associated with each other. The class was 
+    designed to store networks inferred from high-dimensional quantitative 
+    data, with feature-feature networks including gene coexpression 
+    networks (GCNs), gene regulatory networks (GRNs), and
+    co-abundance networks (from proteomics and metabolomics), and
+    observation-observation network including cell-cell distances,
+    species-species relationships, and sample-sample similarities.
 License: GPL-3
 URL: https://github.com/almeidasilvaf/GraphExperiment
 BugReports: https://support.bioconductor.org/tag/GraphExperiment
