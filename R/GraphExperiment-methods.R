@@ -2,9 +2,8 @@
 #' Methods for `GraphExperiment` objects
 #' 
 #' The \code{GraphExperiment} class provides users with methods to get and
-#' set graphs (\code{igraph} objects) representing how features of 
-#' \code{SingleCellExperiment} objects relate to 
-#' each other.
+#' set graphs (\code{igraph} objects) representing how features and observations 
+#' of \code{SingleCellExperiment} objects relate to each other.
 #'
 #' @param x A \code{GraphExperiment} object.
 #' @param i List element (numeric for index, character for name) of the element
@@ -13,28 +12,30 @@
 #' @param ... Ignored.
 #' @return Return values depend on the method. See details and examples.
 #' 
-#' @section graphs and graph methods:
+#' @section rowGraphs/colGraphs and rowGraph/colGraph methods:
 #' \describe{
-#'   \item{\code{graphs(x)}: }{
-#'     Getter for a \code{SimpleList} of \code{igraph} objects.}
-#'   \item{\code{graphs(x) <- value}: }{
+#'   \item{\code{rowGraphs(x)} and \code{colGraphs(x)}: }{
+#'     Getter for a \code{SimpleList} of \code{igraph} objects representing 
+#'     rows and columns, respectively.}
+#'   \item{\code{rowGraphs(x) <- value} and \code{colGraphs(x) <- value}: }{
 #'     Setter for a SimpleList or list (coerced to SimpleList) of \code{igraph}
-#'     objects.}
-#'   \item{\code{graph(x, i)}: }{
+#'     objects representing rows and columns, respectively.}
+#'   \item{\code{rowGraph(x, i)} and \code{colGraph(x, i)}: }{
 #'     Getter for an \code{igraph} object containing graph `i` from the list
-#'     stored in \code{graphs}.}
-#'   \item{\code{graph(x, i) <- value}: }{
-#'     Setter for an \code{igraph} object to be stored in element `i` of the 
-#'     list \code{graphs}}
+#'     stored in \code{rowGraphs} and \code{colGraphs}, respectively.}
+#'   \item{\code{rowGraph(x, i) <- value} and \code{colGraph(x, i) <- value}: }{
+#'     Setter for an \code{igraph} object to be stored in element `i` of 
+#'     \code{rowGraphs} and \code{colGraphs}.}
 #' }
 #' 
-#' @section graphNames methods:
+#' @section rowGraphNames and colGraphNames methods:
 #' \describe{
-#'   \item{\code{graphNames(x)}: }{
-#'     Getter to extract names of graphs in the \code{graphs} slot.}
-#'   \item{\code{graphNames(x) <-  value}: }{
-#'     Setter to assign new names to the graphs stored in the \code{graphs}
-#'     slot.}
+#'   \item{\code{rowGraphNames(x)} and \code{colGraphNames(x)}: }{
+#'     Getter to extract names of graphs in \code{rowGraphs} 
+#'     and \code{colGraphs}.}
+#'   \item{\code{rowGraphNames(x) <- value} and \code{colGraphNames(x) <- value}: }{
+#'     Setter to assign new names to the graphs stored in \code{rowGraphs}
+#'     and \code{colGraphs}.}
 #' }
 #' 
 #' @section rowData method:
@@ -44,12 +45,19 @@
 #'     but with node attributes of graphs included.}
 #' }
 #' 
+#' @section colData method:
+#' \describe{
+#'   \item{\code{colData(x)}: }{
+#'     Getter to extract colData (as in \code{SingleCellExperiment} objects),
+#'     but with node attributes of graphs included.}
+#' }
+#' 
 #' @name GraphExperiment-methods
 #' @aliases 
-#' graphs graphs<-
-#' graph graph<-
-#' graphNames graphNames<-
-#' rowData
+#' rowGraphs rowGraphs<- colGraphs colGraphs<-
+#' rowGraph rowGraph<- colGraph colGraph<-
+#' rowGraphNames rowGraphNames<- colGraphNames colGraphNames<-
+#' rowData colData
 #' 
 #' @examples 
 #' # Simulate elements of a GraphExperiment object
@@ -58,9 +66,12 @@
 #' cell_ids <- paste0("cell", seq_len(100))
 #' mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
 #' 
-#' ## Graph (with node attributes)
+#' ## rowGraph (with node attributes)
 #' g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 #' V(g)$degree <- igraph::strength(g)
+#' 
+#' ## colGraph
+#' g2 <- graph_from_adjacency_matrix(cor(mat), weighted = TRUE)
 #' 
 #' ## rowData
 #' rdata <- data.frame(
@@ -69,114 +80,121 @@
 #'     coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
 #' )
 #' 
+#' ## colData
+#' cdata <- data.frame(
+#'     row.names = cell_ids, 
+#'     celltype = sample(c("ct1", "ct2"), size = length(cell_ids), replace = TRUE)
+#' )
+#' 
 #' 
 #' # Create a GraphExperiment object
 #' ge <- GraphExperiment(
 #'     assays = list(counts = mat), 
 #'     rowData = rdata,
-#'     graphs = list(cor = g)
+#'     colData = cdata,
+#'     rowGraphs = list(cor = g),
+#'     colGraphs = list(cellcor = g2)
 #' )
 #' ge
 #' 
 #' # Extract graph names
-#' graphNames(ge)
-#' ge
+#' rowGraphNames(ge)
+#' colGraphNames(ge)
+#' 
 #' 
 #' # Extract graphs
-#' graphs(ge)
-#' graph(ge, "cor")
+#' rowGraphs(ge)
+#' rowGraph(ge, "cor")
+#' 
+#' colGraphs(ge)
+#' colGraph(ge, "cellcor")
+#' 
 #' 
 #' # Add a new graph
-#' graph(ge, "newcor") <- g
+#' rowGraph(ge, "newcor") <- g
 #' ge
 #' 
 #' # Add a list of graphs
-#' graphs(ge) <- list(cor = g, newcor = g)
+#' colGraphs(ge) <- list(cellcor = g2, new_cellcor = g2)
 #' ge
 #' 
 #' # Replace graph names
-#' graphNames(ge) <- c("network1", "network2")
+#' rowGraphNames(ge) <- c("network1", "network2")
 #' ge
 #' 
 #' # Access rowData (note: rowData + node attributes combined)
 #' rowData(ge)
+#' 
+#' # Access colData (note: colData + node attributes combined)
+#' colData(ge)
 #'
 NULL
 
 ## Getters ---------------------------------------------------------------------
 
-#' Add rowData variables to node attributes
-#' @importFrom igraph set_vertex_attr vertex_attr_names
-#' @noRd
-.rowdata2nat <- function(rowdata, graph) {
-    
-    # Remove rowData vars extracted from graph node attributes
-    idx_remove <- grepl("__", names(rowdata))
-    if(sum(idx_remove) >0) { rowdata <- rowdata[, !idx_remove, drop = FALSE] }
-    
-    # Add missing rowData vars to node attributes
-    fgraph <- graph
-    if(length(rowdata) >0) {
-        nat_list <- as.list(rowdata)
-        
-        if(length(nat_list) >0) {
-            idx <- match(rownames(rowdata), V(graph)$name)
-            for(rvar in names(nat_list)) {
-                fgraph <- set_vertex_attr(
-                    fgraph, name = rvar, index = idx, value = nat_list[[rvar]]
-                )
-            }
-        }
-    }
-    
-    return(fgraph)
-}
+
+# rowData and colData ----------------------------------------------------------
 
 #' @param use.names Passed to the \code{rowData} method of
 #' \code{SingleCellExperiment}. Default: TRUE.
 #' @rdname GraphExperiment-methods
 #' @importFrom SummarizedExperiment rowData
-#' @importFrom igraph as_data_frame
 #' @export
 setMethod(
     "rowData", "GraphExperiment",
     function(x, use.names = TRUE, ...) {
         rdata <- callNextMethod()
-        
-        glist <- x@graphs
-        gnames <- names(glist)
-        
-        # Get a data frame of node attributes for all graphs (if any)
-        nodeat_df <- NULL
-        if(length(glist) > 0) {
-            nodeat_df <- Reduce(cbind, lapply(seq_along(glist), function(n) {
-                df <- igraph::as_data_frame(glist[[n]], what = "vertices")
-                names(df) <- paste0(gnames[n], "__", names(df))
-                df[[1]] <- NULL
-                return(df)
-            }))
-        }
-        
-        # Extend rowData to include node attributes
-        if(length(nodeat_df) > 0) {
-            idx_cbind <- match(rownames(rdata), rownames(nodeat_df))
-            rdata <- cbind(rdata, nodeat_df[idx_cbind, , drop = FALSE])
-        }
+        rdata <- .get_metadata(x@rowGraphs, rdata)
         
         return(rdata)
+    }
+)
+
+#' @param use.names Passed to the \code{colData} method of
+#' \code{SingleCellExperiment}. Default: TRUE.
+#' @rdname GraphExperiment-methods
+#' @importFrom SummarizedExperiment colData
+#' @export
+setMethod(
+    "colData", "GraphExperiment",
+    function(x, use.names = TRUE, ...) {
+        cdata <- callNextMethod()
+        cdata <- .get_metadata(x@colGraphs, cdata)
+        
+        return(cdata)
+    }
+)
+
+
+
+# rowGraphs and colGraphs ------------------------------------------------------
+
+#' @rdname GraphExperiment-methods
+#' @export
+setMethod(
+    "rowGraphs", "GraphExperiment", 
+    function(x) {
+        glist <- x@rowGraphs
+        if(length(glist) >0) {
+            rdata <- rowData(x)
+            glist <- SimpleList(lapply(glist, function(x) {
+                .metadata2nat(rdata, x)
+            }))
+        }
+        return(glist)
     }
 )
 
 #' @rdname GraphExperiment-methods
 #' @export
 setMethod(
-    "graphs", "GraphExperiment", 
+    "colGraphs", "GraphExperiment", 
     function(x) {
-        glist <- x@graphs
+        glist <- x@colGraphs
         if(length(glist) >0) {
-            rdata <- rowData(x)
+            cdata <- colData(x)
             glist <- SimpleList(lapply(glist, function(x) {
-                .rowdata2nat(rdata, x)
+                .metadata2nat(cdata, x)
             }))
         }
         return(glist)
@@ -184,44 +202,84 @@ setMethod(
 )
 
 
+# rowGraph and colGraph --------------------------------------------------------
+
 #' @rdname GraphExperiment-methods
 #' @export
 setMethod(
-    "graph", c("GraphExperiment", "missing"),
+    "rowGraph", c("GraphExperiment", "missing"),
     function(x, i) {
         
-        glist <- x@graphs
+        glist <- x@rowGraphs
         if(length(glist) == 0) {
-            stop("The 'graphs' slot is empty.")
+            stop("The 'rowGraphs' slot is empty.")
         }
-        .rowdata2nat(rowData(x), glist[[1]])
+        .metadata2nat(rowData(x), glist[[1]])
     }
 )
 
 #' @rdname GraphExperiment-methods
-#' @importFrom igraph set_vertex_attr
 #' @export
 setMethod(
-    "graph", "GraphExperiment", 
+    "rowGraph", "GraphExperiment", 
     function(x, i) {
         
         tryCatch({
-            .rowdata2nat(rowData(x), x@graphs[[i]])
+            .metadata2nat(rowData(x), x@rowGraphs[[i]])
         }, error = function(e) {
-            stop("Invalid index or name. Could not find element ", i, " in list of graphs.")
+            stop("Invalid index or name. Could not find element ", i, " in 'rowGraphs'.")
         })
     } 
 )
 
+#' @rdname GraphExperiment-methods
+#' @export
+setMethod(
+    "colGraph", c("GraphExperiment", "missing"),
+    function(x, i) {
+        
+        glist <- x@colGraphs
+        if(length(glist) == 0) {
+            stop("The 'colGraphs' slot is empty.")
+        }
+        .metadata2nat(colData(x), glist[[1]])
+    }
+)
 
 #' @rdname GraphExperiment-methods
 #' @export
 setMethod(
-    "graphNames", "GraphExperiment",
+    "colGraph", "GraphExperiment", 
+    function(x, i) {
+        
+        tryCatch({
+            .metadata2nat(colData(x), x@colGraphs[[i]])
+        }, error = function(e) {
+            stop("Invalid index or name. Could not find element ", i, " in 'colGraphs'.")
+        })
+    } 
+)
+
+# rowGraphNames and colGraphNames ----------------------------------------------
+
+#' @rdname GraphExperiment-methods
+#' @export
+setMethod(
+    "rowGraphNames", "GraphExperiment",
     function(x) {
-        names(graphs(x))
+        names(rowGraphs(x))
     }
 )
+
+#' @rdname GraphExperiment-methods
+#' @export
+setMethod(
+    "colGraphNames", "GraphExperiment",
+    function(x) {
+        names(colGraphs(x))
+    }
+)
+
 
 ## Setters ----
 
@@ -229,30 +287,69 @@ setMethod(
 #' @export
 #' @importFrom BiocBaseUtils setSlots
 setReplaceMethod(
-    "graphs", "GraphExperiment",
+    "rowGraphs", "GraphExperiment",
     function(x, value) {
         
         if(is(value, "list")) { value <- SimpleList(value) }
-        setSlots(x, graphs = value)
+        setSlots(x, rowGraphs = value)
     }
 )
 
 #' @rdname GraphExperiment-methods
 #' @export
+#' @importFrom BiocBaseUtils setSlots
 setReplaceMethod(
-    "graph", "GraphExperiment",
-    function(x, i, value) {
-        graphs(x)[[i]] <- value
-        x
-    }
-)
-
-#' @rdname GraphExperiment-methods
-#' @export
-setReplaceMethod(
-    "graphNames", c("GraphExperiment", "character"),
+    "colGraphs", "GraphExperiment",
     function(x, value) {
-        names(graphs(x)) <- value
+        
+        if(is(value, "list")) { value <- SimpleList(value) }
+        setSlots(x, colGraphs = value)
+    }
+)
+
+
+
+
+#' @rdname GraphExperiment-methods
+#' @export
+setReplaceMethod(
+    "rowGraph", "GraphExperiment",
+    function(x, i, value) {
+        rowGraphs(x)[[i]] <- value
         x
     }
 )
+
+#' @rdname GraphExperiment-methods
+#' @export
+setReplaceMethod(
+    "colGraph", "GraphExperiment",
+    function(x, i, value) {
+        colGraphs(x)[[i]] <- value
+        x
+    }
+)
+
+
+
+
+#' @rdname GraphExperiment-methods
+#' @export
+setReplaceMethod(
+    "rowGraphNames", c("GraphExperiment", "character"),
+    function(x, value) {
+        names(rowGraphs(x)) <- value
+        x
+    }
+)
+
+#' @rdname GraphExperiment-methods
+#' @export
+setReplaceMethod(
+    "colGraphNames", c("GraphExperiment", "character"),
+    function(x, value) {
+        names(colGraphs(x)) <- value
+        x
+    }
+)
+

@@ -43,7 +43,7 @@ NULL
 setAs(
     "SingleCellExperiment", "GraphExperiment", 
     function(from) {
-        new("GraphExperiment", from, graphs = SimpleList())
+        new("GraphExperiment", from, rowGraphs = SimpleList(), colGraphs = SimpleList())
     }
 )
 
@@ -52,7 +52,7 @@ setAs(
 setAs(
     "SummarizedExperiment", "GraphExperiment", 
     function(from) {
-        new("GraphExperiment", as(from, "SingleCellExperiment"), graphs = SimpleList())
+        new("GraphExperiment", as(from, "SingleCellExperiment"), rowGraphs = SimpleList(), colGraphs = SimpleList())
     }
 )
 
@@ -61,6 +61,6 @@ setAs(
 setAs(
     "RangedSummarizedExperiment", "GraphExperiment", 
     function(from) {
-        new("GraphExperiment", as(from, "SingleCellExperiment"), graphs = SimpleList())
+        new("GraphExperiment", as(from, "SingleCellExperiment"), rowGraphs = SimpleList(), colGraphs = SimpleList())
     }
 )

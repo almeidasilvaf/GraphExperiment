@@ -16,10 +16,11 @@ coverage](https://codecov.io/gh/almeidasilvaf/GraphExperiment/graph/badge.svg)](
 
 **GraphExperiment** provides users and developers with infrastructure to
 store quantitative data from omics assays along with networks
-representing how features (e.g., genes, proteins, metabolites) interact
-with each other. The `GraphExperiment` S4 class extends
-`SingleCellExperiment` to include support for `igraph` objects
-associated with features.
+representing how assay features (e.g., genes, proteins, metabolites)
+and/or observations (e.g., samples, cells, species) interact with each
+other. The `GraphExperiment` S4 class extends `SingleCellExperiment` to
+include support for `igraph` objects associated with features (stored in
+`rowGraphs`) and observations (stored in `colGraphs`).
 
 The figure belows summarizes the `GraphExperiment` class in comparison
 to the `SingleCellExperiment` class.

@@ -11,7 +11,8 @@ setClass(
     "GraphExperiment",
     contains = "SingleCellExperiment",
     slots = c(
-        graphs = "list_or_SimpleList"
+        rowGraphs = "list_or_SimpleList",
+        colGraphs = "list_or_SimpleList"
     ),
-    prototype = prototype(graph = list())
+    prototype = prototype(rowGraphs = list(), colGraphs = list())
 )

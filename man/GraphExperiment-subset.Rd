@@ -33,9 +33,12 @@ gene_ids <- paste0("gene", seq_len(200))
 cell_ids <- paste0("cell", seq_len(100))
 mat <- matrix(rpois(20000, 5), ncol = 100, dimnames = list(gene_ids, cell_ids))
 
-## Graph (with node attributes)
+## rowGraph (with node attributes)
 g <- graph_from_adjacency_matrix(cor(t(mat)), weighted = TRUE)
 V(g)$degree <- igraph::strength(g)
+
+## colGraph
+g2 <- graph_from_adjacency_matrix(cor(mat), weighted = TRUE)
 
 ## rowData
 rdata <- data.frame(
@@ -44,12 +47,20 @@ rdata <- data.frame(
     coding = sample(c(TRUE, FALSE), size = length(gene_ids), replace = TRUE)
 )
 
+## colData
+cdata <- data.frame(
+    row.names = cell_ids, 
+    celltype = sample(c("ct1", "ct2"), size = length(cell_ids), replace = TRUE)
+)
+
 
 # Create a GraphExperiment object
 ge <- GraphExperiment(
     assays = list(counts = mat), 
     rowData = rdata,
-    graphs = list(cor = g)
+    colData = cdata,
+    rowGraphs = list(cor = g),
+    colGraphs = list(cellcor = g2)
 )
 ge
 

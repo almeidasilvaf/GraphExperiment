@@ -2,28 +2,65 @@
 ## Getters ---------------------------------------------------------------------
 
 #' @export
-setGeneric("graphs", function(x, ...) standardGeneric("graphs"))
+setGeneric("rowGraphs", function(x, ...) standardGeneric("rowGraphs"))
+
+#' @export
+setGeneric("colGraphs", function(x, ...) standardGeneric("colGraphs"))
+
+
+
 
 #' @export
 setGeneric(
-    "graph", signature = c("x", "i"),
-    function(x, i, ...) standardGeneric("graph")
+    "rowGraph", signature = c("x", "i"),
+    function(x, i, ...) standardGeneric("rowGraph")
 )
 
 #' @export
-setGeneric("graphNames", function(x, ...) standardGeneric("graphNames"))
+setGeneric(
+    "colGraph", signature = c("x", "i"),
+    function(x, i, ...) standardGeneric("colGraph")
+)
+
+
+
+
+#' @export
+setGeneric("rowGraphNames", function(x, ...) standardGeneric("rowGraphNames"))
+
+#' @export
+setGeneric("colGraphNames", function(x, ...) standardGeneric("colGraphNames"))
 
 
 ## Setters ---------------------------------------------------------------------
 
 #' @export
-setGeneric("graphs<-", function(x, ..., value) standardGeneric("graphs<-"))
+setGeneric("rowGraphs<-", function(x, ..., value) standardGeneric("rowGraphs<-"))
+
+#' @export
+setGeneric("colGraphs<-", function(x, ..., value) standardGeneric("colGraphs<-"))
+
+
+
 
 #' @export
 setGeneric(
-    "graph<-", signature = c("x", "i"),
-    function(x, i, ..., value) standardGeneric("graph<-")
+    "rowGraph<-", signature = c("x", "i"),
+    function(x, i, ..., value) standardGeneric("rowGraph<-")
 )
 
 #' @export
-setGeneric("graphNames<-", function(x, ..., value) standardGeneric("graphNames<-"))
+setGeneric(
+    "colGraph<-", signature = c("x", "i"),
+    function(x, i, ..., value) standardGeneric("colGraph<-")
+)
+
+
+
+
+#' @export
+setGeneric("rowGraphNames<-", function(x, ..., value) standardGeneric("rowGraphNames<-"))
+
+#' @export
+setGeneric("colGraphNames<-", function(x, ..., value) standardGeneric("colGraphNames<-"))
+

@@ -1,5 +1,5 @@
 ---
-title: "Introduction to the *GraphExperiment* class"
+title: "Introduction to the GraphExperiment class"
 author: 
   - name: Fabricio Almeida-Silva
     affiliation: |
@@ -33,20 +33,25 @@ knitr::opts_chunk$set(
 Networks (or graphs) have become widely used data representations in biology, 
 as they can efficiently encode node-node interactions and neighborhoods.
 In high-throughput, quantitative omics data (e.g., transcriptomics, proteomics,
-metabolomics, epigenomics, etc), widely used network representations include
+metabolomics, epigenomics, etc), widely used feature-level 
+network representations include
 gene coexpression, protein-protein interaction, gene regulatory, and 
-co-abundance networks. While data structures to store quantitative data and
+co-abundance networks, and cell-cell communication,
+sample-sample similarity, and species-species networks at the observation 
+level. While data structures to store quantitative data and
 associated metadata exist (e.g., `SummarizedExperiment`, `SingleCellExperiment`,
-`SpatialExperiment`, etc), support for networks describing how features relate
+`SpatialExperiment`, etc), support for networks describing how features
+(i.e., assay rows) and/or observations (i.e., assay columns) relate
 to each other is currently missing. `GraphExperiment` is an S4 class that 
-extends `SingleCellExperiment` [@sce] to include an additional container 
-for networks associated with **assay features** (graphs representing columns,
-such as samples and cells, are not supported by this package).
+extends `SingleCellExperiment` [@sce] to include additional containers 
+for networks associated with assay features (`rowGraphs`) and
+assay observations (`colGraphs`).
 
-Of note, trees are an alternative way of representing how assay features are 
-related to each other. Users interested in tree representations of 
-assays rows/columns can use the `r BiocStyle::Biocpkg("TreeSummarizedExperiment")`
-package. Trees are essentially *a kind of graph* (i.e., all trees are graphs,
+Of note, trees are an alternative way of representing how assay 
+features/observations are related to each other. Users interested in tree
+representations of assays rows/columns can use 
+the `r BiocStyle::Biocpkg("TreeSummarizedExperiment")` package. 
+Trees are essentially *a kind of graph* (i.e., all trees are graphs,
 but not all graphs are trees). Here, we chose to use a more
 general graph representation (namely `igraph` objects) to provide users and 
 developers with more flexibility.
@@ -78,33 +83,37 @@ all `SingleCellExperiment` slots are present in `GraphExperiment`, including:
 log-normalized counts, TPM, etc) data, with features in rows and observations
 in columns.
 - `colData`: a data frame with column (observation) metadata, such
-as sample ID, condition, batch ID, genotype, etc.
+as cell type, sample ID, condition, batch ID, genotype, etc.
 - `rowData`: a data frame with row (feature) metadata, such as gene ID,
 genomic coordinates, functional annotation, etc.
 - `reducedDims`: list of data frames with reduced dimensions, such as PCA,
 t-SNE, and UMAP embeddings.
 
 Compared to `SingleCellExperiment` objects, `GraphExperiment` 
-provides an additional container:
+provides two additional containers: [^1]
 
-- `graphs`: list of `igraph` objects containing graphs, including (but 
-optional) node and edge attributes. Graphs are used to represent how features
-(rows, not columns) relate to each other.[^1]
+- `rowGraphs`: list of `igraph` objects containing graphs representing
+feature-feature relationships, including (but optional) node and 
+edge attributes.
+- `colGraphs`: list of `igraph` objects containing graphs representing
+observation-observation relationships, including (but optional) node and 
+edge attributes.
 
 ```{r fig, echo=FALSE, out.width = "100%", fig.cap="The GraphExperiment class."}
 knitr::include_graphics("GraphExperiment.png")
 ```
 
 [^1]: **Note on software design:** if you're familiar with 
-`SingleCellExperiment` objects, you probably know that it offers a `rowPairs` 
-slot to store pairwise relationships between rows of assays. 
-In theory, some of the data stored in `graphs` (of a 
-`GraphExperiment` object) could be stored in `rowPairs` (of a 
+`SingleCellExperiment` objects, you probably know that it offers 
+`rowPairs`/`colPairs` slots to store pairwise relationships between rows and
+columns of assays, respectively. 
+In theory, some of the data stored in `rowGraphs`/`colGraphs` (of a 
+`GraphExperiment` object) could be stored in `rowPairs`/`colPairs` (of a 
 `SingleCellExperiment`). However, we chose to implement a dedicated slot with
 `igraph` objects to guarantee (i) seamless interoperability with other
 packages, given that `igraph` is the de facto standard class for graphs in R; 
-and (ii) convenience in methods (e.g., subsetting, integration with `rowData`, 
-integration across multiple graphs, etc).
+and (ii) convenience in methods (e.g., subsetting, integration with 
+`rowData`/`colData`, integration across multiple graphs, etc).
 
 
 The `igraph` data class from the `r BiocStyle::CRANpkg("igraph")` package
@@ -117,8 +126,15 @@ the `r BiocStyle::CRANpkg("igraph")` vignettes.
 
 `GraphExperiment` objects can be created from scratch using the constructor
 function `GraphExperiment()`. Below we will simulate a scRNA-seq count matrix 
-with some gene (row) and cell (column) metadata, and create a graph based 
-on gene-gene correlations.
+with some gene (row) and cell (column) metadata, and create graphs based 
+on gene-gene and cell-cell correlations [^2].
+
+[^2]: **Tip:** in day-to-day single-cell RNA-seq analyses, researchers
+typically infer cell-cell graphs based on shared nearest-neighbors (SNN), 
+which are then used to find clusters that can be mapped to cell types. 
+Readers interested in this sort of graph can have a look 
+at the `buildSNNGraph()` function from the `r BiocStyle::Biocpkg("scran")` 
+package.
 
 ```{r simulate_slots, message=FALSE}
 # Simulate parts of a `GraphExperiment` object
@@ -143,12 +159,17 @@ cdata <- data.frame(
 )
 head(cdata)
 
-## Graph (with node attribute `degree`)
-g <- graph_from_adjacency_matrix(
+## rowGraph (with node attribute `degree`)
+rg <- graph_from_adjacency_matrix(
     cor(t(mat)), mode = "undirected", weighted = TRUE
 )
-g <- set_vertex_attr(g, "degree", value = strength(g))
-g
+rg <- set_vertex_attr(rg, "degree", value = strength(rg))
+rg
+
+## colGraph
+cg <- graph_from_adjacency_matrix(
+    cor(mat), mode = "undirected", weighted = TRUE
+)
 ```
 
 To create a `GraphExperiment` object from the constructor function, you would
@@ -160,7 +181,8 @@ ge <- GraphExperiment(
     assays = list(counts = mat),
     rowData = rdata,
     colData = cdata,
-    graphs = list(cor = g)
+    rowGraphs = list(gene_cor = rg),
+    colGraphs = list(cell_cor = cg)
 )
 ge
 ```
@@ -168,22 +190,24 @@ ge
 If you're familiar with `SummarizedExperiment` and `SingleCellExperiment` 
 objects, you will certainly recognize nearly everything you see in `ge`.
 Compared to `SingleCellExperiment` objects, the only difference here is
-in the last row, which indicates that this object contains a `graph` 
-named 'cor'. 
+in the last two rows, which indicate that this object contains a `rowGraph` 
+named 'gene_cor' and a `colGraph` named 'cell_cor'.
 
-Importantly, since nodes of graphs are always in sync with `rownames`, 
-**feature IDs in rownames and graph node names need to be the same**.
+Importantly, since nodes of `rowGraphs`/`colGraphs` are always in sync 
+with `rownames`/`colnames`, 
+**feature IDs in rownames and rowGraphs must be the same**, and
+likewise for observation IDs in colnames and colGraphs.
 For example, attempting to create a `GraphExperiment` object with some
 features from `rownames` missing would lead to an error:
 
 ```{r error_missing_from_graph, error = TRUE}
-# Remove 'gene1' to 'gene10' from the graph and try to recreate object
-g2 <- delete_vertices(g, paste0("gene", 1:10))
+# Remove 'gene1' to 'gene10' from the rowGraph and try to recreate object
+rg2 <- delete_vertices(rg, paste0("gene", 1:10))
 GraphExperiment(
     assays = list(counts = mat),
     rowData = rdata,
     colData = cdata,
-    graphs = list(cor = g2)
+    rowGraphs = list(gene_cor = rg2)
 )
 ```
 
@@ -198,55 +222,71 @@ ge1 <- as(se, "GraphExperiment")
 ge1
 ```
 
-Note that the `graphs` container is still there, but empty. To access the 
-names of all graphs, you will use the `graphNames()` function.
+Note that the `rowGraphs`/`colGraphs` containers are still there, but empty. 
+
+To access the names of all graphs, you will use the `rowGraphNames()` and
+`colGraphNames()` functions.
 
 ```{r graphNames}
-# Get graph names
-graphNames(ge)      # 'cor'
-graphNames(ge1)     # empty (NULL)
+# Get rowGraph names
+rowGraphNames(ge)      # 'gene_cor'
+rowGraphNames(ge1)     # empty (NULL)
+
+# Get colGraph names
+colGraphNames(ge)      # 'cell_cor'
+colGraphNames(ge1)     # empty (NULL)
 ```
 
-# Accessing `graphs` and `rowData` (a.k.a. 'getters')
+# Accessing `rowGraphs`/`colGraphs` and `rowData`/`colData` (a.k.a. 'getters')
 
-To access graphs in `graphs`, you can use one of two getter functions:
+To access graphs in `rowGraphs`/`colGraphs`, you can use one of the following
+getter functions:
 
-- `graphs(x)`: retrieves **all** graphs as a simple list of `igraph` objects.
-- `graph(x, i)`: retrieves only graph $i$ from the list. Note that $i$
-can be a numeric scalar (index) or a character scalar (name).
+- `rowGraphs(x)`/`colGraphs(x)`: retrieves **all** (row/col)Graphs as a 
+list of `igraph` objects.
+- `rowGraph(x, i)`/`colGraph(x, i)`: retrieves only graph $i$ from the list. 
+Note that $i$ can be a numeric scalar (index) or a character scalar (name).
 
 The design here is equivalent to `assays()` versus `assay()` for 
 `SummarizedExperiment` objects.
 
 ```{r getters}
-# Get graphs
-graphs(ge)
+# Get rowGraphs
+rowGraphs(ge)
 
-# Get first graph by index
-graph(ge, 1)
+# Get colGraphs
+colGraphs(ge)
 
-# Get first graph by index (alternative)
-graphs(ge)[[1]]
+# Get first rowGraph by index
+rowGraph(ge, 1)
+
+# Get first rowGraph by index (alternative)
+rowGraphs(ge)[[1]]
 
 # Get graph by name
-graph(ge, "cor")
+rowGraph(ge, "gene_cor")
 ```
 
 Careful readers will notice that this `igraph` object has node attributes that
 were not present in the original graph: 'pathway' and 'coding'. This is 
-because `graphs()`/`graph()` automatically extract `rowData` variables (if any) 
-and add them to node attributes. The same happens in the other direction:
-the `rowData()` method for `GraphExperiment` objects automatically adds
-node attributes (if any) to `rowData` variables.
+because `rowGraphs()`/`rowGraph()` automatically extract `rowData` variables 
+(if any) and add them to node attributes. `colGraphs()`/`colGraph()` work
+in the same way (but with `colData`, of course). 
+The same happens in the other direction: the `rowData()`/`colData()` methods 
+for `GraphExperiment` objects automatically add node attributes (if any) to 
+`rowData`/`colData`.
 
 ```{r rowdata_getter}
-# `graphs` and `rowData` are always in sync!
+# `rowGraphs` and `rowData` are always in sync!
 rowData(ge)
+
+# `colGraphs` and `colData` too - yay!
+colGraph(ge, 1) # note the `cell_type` attribute extracted from `colData`
 ```
 
 Variables 'pathway' and 'coding' were in the original data frame we used as
-`rowData`, but variable 'cor__degree' was added by extracting the *degree*
-attribute of nodes in graph `cor`.
+`rowData`, but variable 'gene_cor__degree' was added by extracting the *degree*
+attribute of nodes in rowGraph `gene_cor`.
 
 # Modifying `GraphExperiment` objects (a.k.a. 'setters')
 
@@ -254,42 +294,46 @@ Like in the `SummarizedExperiment` and `SingleCellExperiment` classes,
 all getter methods specific to `GraphExperiment` objects have a corresponding
 setter method. Such methods allow users to modify elements by adding `<-`
 after the getter method. For example, to add or replace a particular graph,
-you would use the `graph<-` method as follows:
+you would use the `rowGraph<-`/`colGraph<-` method as follows:
 
 ```{r graph_setter}
-# Create a new graph without correlations between -0.4 and 0.4
-fg <- graph(ge, "cor") |> 
+# Create a new rowGraph without correlations between -0.4 and 0.4
+rg_filt <- rowGraph(ge, "gene_cor") |> 
     delete_vertex_attr("pathway") |>
     delete_vertex_attr("degree") |>
     delete_vertex_attr("coding")
 
-todelete <- abs(E(fg)$weight) <0.4
-fg <- delete_edges(fg, which(todelete))
-fg
+todelete <- abs(E(rg_filt)$weight) <0.4
+rg_filt <- delete_edges(rg_filt, which(todelete))
+rg_filt
 
 # Add filtered graph a new graph named `fcor`
-graph(ge, "fcor") <- fg
+rowGraph(ge, "filt_genecor") <- rg_filt
 ge
 ```
 
-If you'd like to replace all graphs at once, you could use the `graphs<-`
-setter. For example, let's add a few graphs to the `GraphExperiment` object
-we created before by coercing from `SummarizedExperiment`:
+If you'd like to replace all graphs at once, you could use the 
+`rowGraphs<-`/`colGraphs<-` setters. For example, let's add a few graphs to 
+the `GraphExperiment` object we created before by coercing 
+from `SummarizedExperiment`:
 
 ```{r graphs_setter}
-# Taking a quick look (note: nothing in `graphs`)
+# Taking a quick look (note: nothing in `rowGraphs`/`colGraphs`)
 ge1
 
 # Adding graphs from `ge`
-graphs(ge1) <- graphs(ge)
+rowGraphs(ge1) <- rowGraphs(ge)
+colGraphs(ge1) <- colGraphs(ge)
 ge1
 ```
 
-Lastly, you can also rename graphs by updating `graphNames` as follows:
+Lastly, you can also rename graphs by updating `rowGraphNames`/`colGraphNames` 
+as follows:
 
 ```{r graphNames_setter}
 # Rename graphs
-graphNames(ge1) <- c("correlations", "correlations_filtered_0.4")
+rowGraphNames(ge1) <- c("correlations", "correlations_filtered_0.4")
+colGraphNames(ge1) <- c("cell_correlations")
 ge1
 ```
 
@@ -300,16 +344,18 @@ In `SummarizedExperiment` objects, subsetting rows and columns
 besides the assays. The same is true for `SingleCellExperiment` objects:
 subsetting columns automatically subsets `colData` and `reducedDims`.
 
-Since graphs in `GraphExperiment` objects are linked to rows, subsetting
-rows of a `GraphExperiment` object automatically subsets rows of the
-`assays`, `rowData`, and all graphs in `graphs`. For example:
+Since graphs in `GraphExperiment` objects are linked to rows and columns, 
+subsetting rows of a `GraphExperiment` object automatically subsets rows of the
+`assays`, `rowData`, and all graphs in `rowGraphs`, and subsetting
+columns automatically subsets columns of the `assays`, `colData`, and
+graphs in `colGraphs`. For example:
 
 ```{r subset}
 # Subsetting `GraphExperiment` object
-ge_subset <- ge[1:10, ]
+ge_subset <- ge[1:10, 1:10]
 
 ge_subset
-graph(ge_subset, "cor")
+rowGraph(ge_subset, "gene_cor")
 ```
 
 # Session information {.unnumbered}
