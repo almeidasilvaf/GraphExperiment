@@ -196,10 +196,10 @@ rowGraphs(ge)
 #> List of length 1
 #> names(1): cor
 rowGraph(ge, "cor")
-#> IGRAPH ce6caa6 DNW- 200 39990 -- 
+#> IGRAPH bb70054 DNW- 200 39990 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from ce6caa6 (vertex names):
+#> + edges from bb70054 (vertex names):
 #>  [1] gene1->gene1  gene1->gene2  gene1->gene3  gene1->gene4  gene1->gene5 
 #>  [6] gene1->gene6  gene1->gene7  gene1->gene8  gene1->gene9  gene1->gene10
 #> [11] gene1->gene11 gene1->gene12 gene1->gene13 gene1->gene14 gene1->gene15
@@ -213,9 +213,9 @@ colGraphs(ge)
 #> List of length 1
 #> names(1): cellcor
 colGraph(ge, "cellcor")
-#> IGRAPH 0460ba5 DNW- 100 9998 -- 
+#> IGRAPH 770a95c DNW- 100 9998 -- 
 #> + attr: name (v/c), celltype (v/c), weight (e/n)
-#> + edges from 0460ba5 (vertex names):
+#> + edges from 770a95c (vertex names):
 #>  [1] cell1->cell1  cell1->cell2  cell1->cell3  cell1->cell4  cell1->cell5 
 #>  [6] cell1->cell6  cell1->cell7  cell1->cell8  cell1->cell9  cell1->cell10
 #> [11] cell1->cell11 cell1->cell12 cell1->cell13 cell1->cell14 cell1->cell15

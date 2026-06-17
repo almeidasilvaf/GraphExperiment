@@ -144,9 +144,9 @@ rg <- graph_from_adjacency_matrix(
 )
 rg <- set_vertex_attr(rg, "degree", value = strength(rg))
 rg
-#> IGRAPH c8329f2 UNW- 200 20096 -- 
+#> IGRAPH 8c54443 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), weight (e/n)
-#> + edges from c8329f2 (vertex names):
+#> + edges from 8c54443 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -295,10 +295,10 @@ colGraphs(ge)
 
 # Get first rowGraph by index
 rowGraph(ge, 1)
-#> IGRAPH c8329f2 UNW- 200 20096 -- 
+#> IGRAPH 8c54443 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from c8329f2 (vertex names):
+#> + edges from 8c54443 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -310,10 +310,10 @@ rowGraph(ge, 1)
 
 # Get first rowGraph by index (alternative)
 rowGraphs(ge)[[1]]
-#> IGRAPH c8329f2 UNW- 200 20096 -- 
+#> IGRAPH 8c54443 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from c8329f2 (vertex names):
+#> + edges from 8c54443 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -325,10 +325,10 @@ rowGraphs(ge)[[1]]
 
 # Get graph by name
 rowGraph(ge, "gene_cor")
-#> IGRAPH c8329f2 UNW- 200 20096 -- 
+#> IGRAPH 8c54443 UNW- 200 20096 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from c8329f2 (vertex names):
+#> + edges from 8c54443 (vertex names):
 #>  [1] gene1--gene1  gene1--gene2  gene1--gene3  gene1--gene4  gene1--gene5 
 #>  [6] gene1--gene6  gene1--gene7  gene1--gene8  gene1--gene9  gene1--gene10
 #> [11] gene1--gene11 gene1--gene12 gene1--gene13 gene1--gene14 gene1--gene15
@@ -373,9 +373,9 @@ rowData(ge)
 
 # `colGraphs` and `colData` too - yay!
 colGraph(ge, 1) # note the `cell_type` attribute extracted from `colData`
-#> IGRAPH cf590bd UNW- 100 5050 -- 
+#> IGRAPH 98a5462 UNW- 100 5050 -- 
 #> + attr: name (v/c), cell_type (v/c), weight (e/n)
-#> + edges from cf590bd (vertex names):
+#> + edges from 98a5462 (vertex names):
 #>  [1] cell1--cell1  cell1--cell2  cell1--cell3  cell1--cell4  cell1--cell5 
 #>  [6] cell1--cell6  cell1--cell7  cell1--cell8  cell1--cell9  cell1--cell10
 #> [11] cell1--cell11 cell1--cell12 cell1--cell13 cell1--cell14 cell1--cell15
@@ -411,9 +411,9 @@ rg_filt <- rowGraph(ge, "gene_cor") |>
 todelete <- abs(E(rg_filt)$weight) <0.4
 rg_filt <- delete_edges(rg_filt, which(todelete))
 rg_filt
-#> IGRAPH 7c25d9b UNW- 200 202 -- 
+#> IGRAPH abfa81f UNW- 200 202 -- 
 #> + attr: name (v/c), weight (e/n)
-#> + edges from 7c25d9b (vertex names):
+#> + edges from abfa81f (vertex names):
 #>  [1] gene1 --gene1  gene2 --gene2  gene3 --gene3  gene4 --gene4  gene5 --gene5 
 #>  [6] gene6 --gene6  gene7 --gene7  gene8 --gene8  gene9 --gene9  gene10--gene10
 #> [11] gene11--gene11 gene12--gene12 gene13--gene13 gene14--gene14 gene15--gene15
@@ -544,10 +544,10 @@ ge_subset
 #> rowGraphs(2): gene_cor filt_genecor
 #> colGraphs(1): cell_cor
 rowGraph(ge_subset, "gene_cor")
-#> IGRAPH b5e3498 UNW- 10 55 -- 
+#> IGRAPH 2a24a7c UNW- 10 55 -- 
 #> + attr: name (v/c), degree (v/n), pathway (v/c), coding (v/l), weight
 #> | (e/n)
-#> + edges from b5e3498 (vertex names):
+#> + edges from 2a24a7c (vertex names):
 #>  [1] gene1--gene1 gene1--gene2 gene2--gene2 gene1--gene3 gene2--gene3
 #>  [6] gene3--gene3 gene1--gene4 gene2--gene4 gene3--gene4 gene4--gene4
 #> [11] gene1--gene5 gene2--gene5 gene3--gene5 gene4--gene5 gene5--gene5
@@ -575,23 +575,23 @@ sessioninfo::session_info()
 #>  collate  en_US.UTF-8
 #>  ctype    en_US.UTF-8
 #>  tz       UTC
-#>  date     2026-05-22
+#>  date     2026-06-17
 #>  pandoc   3.9.0.2 @ /usr/bin/ (via rmarkdown)
-#>  quarto   1.9.37 @ /usr/local/bin/quarto
+#>  quarto   1.9.38 @ /usr/local/bin/quarto
 #> 
 #> ─ Packages ───────────────────────────────────────────────────────────────────
 #>  package              * version date (UTC) lib source
 #>  abind                  1.4-8   2024-09-12 [1] RSPM (R 4.6.0)
 #>  Biobase              * 2.73.1  2026-04-29 [1] Bioconductor 3.24 (R 4.6.0)
 #>  BiocBaseUtils          1.15.1  2026-05-10 [1] Bioconductor 3.24 (R 4.6.0)
-#>  BiocGenerics         * 0.59.2  2026-05-17 [1] Bioconductor 3.24 (R 4.6.0)
+#>  BiocGenerics         * 0.59.7  2026-06-07 [1] Bioconductor 3.24 (R 4.6.0)
 #>  BiocManager            1.30.27 2025-11-14 [1] RSPM (R 4.6.0)
 #>  BiocStyle            * 2.41.0  2026-04-28 [1] Bioconductor 3.24 (R 4.6.0)
-#>  bookdown               0.46    2025-12-05 [1] RSPM (R 4.6.0)
+#>  bookdown               0.47    2026-06-16 [1] RSPM (R 4.6.0)
 #>  bslib                  0.11.0  2026-05-16 [2] RSPM (R 4.6.0)
 #>  cachem                 1.1.0   2024-05-16 [2] RSPM (R 4.6.0)
 #>  cli                    3.6.6   2026-04-09 [2] RSPM (R 4.6.0)
-#>  DelayedArray           0.39.2  2026-05-17 [1] Bioconductor 3.24 (R 4.6.0)
+#>  DelayedArray           0.39.3  2026-06-01 [1] Bioconductor 3.24 (R 4.6.0)
 #>  desc                   1.4.3   2023-12-10 [2] RSPM (R 4.6.0)
 #>  digest                 0.6.39  2025-11-19 [2] RSPM (R 4.6.0)
 #>  evaluate               1.0.5   2025-08-27 [2] RSPM (R 4.6.0)
@@ -600,11 +600,11 @@ sessioninfo::session_info()
 #>  generics             * 0.1.4   2025-05-09 [1] RSPM (R 4.6.0)
 #>  GenomicRanges        * 1.65.0  2026-04-28 [1] Bioconductor 3.24 (R 4.6.0)
 #>  glue                   1.8.1   2026-04-17 [2] RSPM (R 4.6.0)
-#>  GraphExperiment      * 1.1.1   2026-05-22 [1] Bioconductor
+#>  GraphExperiment      * 1.1.2   2026-06-17 [1] Bioconductor
 #>  htmltools              0.5.9   2025-12-04 [2] RSPM (R 4.6.0)
 #>  htmlwidgets            1.6.4   2023-12-06 [2] RSPM (R 4.6.0)
-#>  igraph               * 2.3.1   2026-05-04 [1] RSPM (R 4.6.0)
-#>  IRanges              * 2.47.1  2026-05-17 [1] Bioconductor 3.24 (R 4.6.0)
+#>  igraph               * 2.3.2   2026-05-29 [1] RSPM (R 4.6.0)
+#>  IRanges              * 2.47.2  2026-06-01 [1] Bioconductor 3.24 (R 4.6.0)
 #>  jquerylib              0.1.4   2021-04-26 [2] RSPM (R 4.6.0)
 #>  jsonlite               2.0.0   2025-03-27 [2] RSPM (R 4.6.0)
 #>  knitr                  1.51    2025-12-20 [2] RSPM (R 4.6.0)
@@ -623,17 +623,17 @@ sessioninfo::session_info()
 #>  rlang                  1.2.0   2026-04-06 [2] RSPM (R 4.6.0)
 #>  rmarkdown              2.31    2026-03-26 [1] RSPM (R 4.6.0)
 #>  S4Arrays               1.13.0  2026-04-28 [1] Bioconductor 3.24 (R 4.6.0)
-#>  S4Vectors            * 0.51.2  2026-05-17 [1] Bioconductor 3.24 (R 4.6.0)
+#>  S4Vectors            * 0.51.3  2026-06-01 [1] Bioconductor 3.24 (R 4.6.0)
 #>  sass                   0.4.10  2025-04-11 [2] RSPM (R 4.6.0)
 #>  Seqinfo              * 1.3.0   2026-04-28 [1] Bioconductor 3.24 (R 4.6.0)
-#>  sessioninfo            1.2.3   2025-02-05 [2] RSPM (R 4.6.0)
+#>  sessioninfo            1.2.4   2026-06-04 [2] RSPM (R 4.6.0)
 #>  SingleCellExperiment * 1.35.1  2026-05-14 [1] Bioconductor 3.24 (R 4.6.0)
 #>  SparseArray            1.13.2  2026-05-01 [1] Bioconductor 3.24 (R 4.6.0)
 #>  SummarizedExperiment * 1.43.0  2026-04-28 [1] Bioconductor 3.24 (R 4.6.0)
 #>  systemfonts            1.3.2   2026-03-05 [2] RSPM (R 4.6.0)
 #>  textshaping            1.0.5   2026-03-06 [2] RSPM (R 4.6.0)
 #>  vctrs                  0.7.3   2026-04-11 [2] RSPM (R 4.6.0)
-#>  xfun                   0.57    2026-03-20 [2] RSPM (R 4.6.0)
+#>  xfun                   0.58    2026-06-01 [2] RSPM (R 4.6.0)
 #>  XVector                0.53.0  2026-04-28 [1] Bioconductor 3.24 (R 4.6.0)
 #>  yaml                   2.3.12  2025-12-10 [2] RSPM (R 4.6.0)
 #> 
