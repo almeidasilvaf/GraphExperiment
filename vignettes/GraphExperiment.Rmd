@@ -5,10 +5,6 @@ author:
     affiliation: |
       VIB-UGent Center for Plant Systems Biology, Ghent University, 
       Ghent, Belgium
-  - name: Yves Van de Peer
-    affiliation: |
-      VIB-UGent Center for Plant Systems Biology, Ghent University, 
-      Ghent, Belgium
 output: 
   BiocStyle::html_document:
     toc: true
