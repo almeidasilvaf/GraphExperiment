@@ -8,12 +8,7 @@ Authors@R:
            family = "Almeida-Silva",
            role = c("aut", "cre"),
            email = "fabricio_almeidasilva@hotmail.com",
-           comment = c(ORCID = "0000-0002-5314-2964")),
-    person(given = "Yves",
-           family = "Van de Peer",
-           role = "aut",
-           email = "yves.vandepeer@psb.vib-ugent.be",
-           comment = c(ORCID = "0000-0003-4327-3730"))
+           comment = c(ORCID = "0000-0002-5314-2964"))
     )
 Description: GraphExperiment provides users and developers with an S4 class
     that extends `SingleCellExperiment` by offering infrastructure to

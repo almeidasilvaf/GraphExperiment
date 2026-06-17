@@ -51,17 +51,17 @@ R. Please run this yourself to check for any updates on how to cite
 print(citation('GraphExperiment'), bibtex = TRUE)
 #> To cite package 'GraphExperiment' in publications use:
 #> 
-#>   Almeida-Silva F, Van de Peer Y (2026). _GraphExperiment: S4 Class for
-#>   Quantitative Data and Associated Networks_. R package version 0.99.0,
+#>   Almeida-Silva F (2026). _GraphExperiment: S4 Class for Quantitative
+#>   Data and Associated Networks_. R package version 1.1.1,
 #>   <https://github.com/almeidasilvaf/GraphExperiment>.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Manual{,
 #>     title = {GraphExperiment: S4 Class for Quantitative Data and Associated Networks},
-#>     author = {Fabricio Almeida-Silva and Yves {Van de Peer}},
+#>     author = {Fabricio Almeida-Silva},
 #>     year = {2026},
-#>     note = {R package version 0.99.0},
+#>     note = {R package version 1.1.1},
 #>     url = {https://github.com/almeidasilvaf/GraphExperiment},
 #>   }
 ```
